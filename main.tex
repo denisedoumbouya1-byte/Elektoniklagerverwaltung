@@ -1,0 +1,2003 @@
+%% ============================================================
+%%  Hochschul-Praktikumsdokumentation
+%%  „Vom Wasserfall zum Sprint"
+%%  Modul: MIS und Unternehmenssoftware
+%% ============================================================
+\documentclass[12pt, a4paper, twoside]{report}
+
+%% ---- Encoding & Sprache ------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+
+%% ---- Schrift -----------------------------------------------
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% ---- Seitenlayout ------------------------------------------
+\usepackage[
+  top=2.5cm, bottom=2.5cm,
+  left=3.0cm, right=2.5cm,
+  headheight=15pt
+]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\nouppercase{\leftmark}}
+\fancyhead[RE,LO]{\small Vom Wasserfall zum Sprint}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% ---- Grafik & Farbe ----------------------------------------
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\definecolor{hsPrimary}{RGB}{0,82,147}
+\definecolor{hsAccent}{RGB}{220,230,242}
+\definecolor{codeGray}{RGB}{245,245,245}
+\definecolor{darkGreen}{RGB}{0,100,0}
+\definecolor{darkRed}{RGB}{139,0,0}
+
+%% ---- Tabellen ----------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+%% ---- Code-Listings -----------------------------------------
+\usepackage{listings}
+\lstdefinestyle{javaStyle}{
+  language=Java,
+  backgroundcolor=\color{codeGray},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries\color{hsPrimary},
+  commentstyle=\itshape\color{darkGreen},
+  stringstyle=\color{darkRed},
+  numberstyle=\tiny\color{gray},
+  numbers=left,
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  framerule=0.4pt,
+  rulecolor=\color{gray!50},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  tabsize=4,
+  captionpos=b,
+  xleftmargin=10pt,
+  xrightmargin=5pt,
+  aboveskip=12pt,
+  belowskip=8pt,
+}
+\lstset{style=javaStyle}
+
+%% ---- TikZ / UML-ähnliche Darstellungen --------------------
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+%% ---- Hyperlinks --------------------------------------------
+\usepackage[
+  colorlinks=true,
+  linkcolor=hsPrimary,
+  citecolor=hsPrimary,
+  urlcolor=hsPrimary,
+  pdftitle={Vom Wasserfall zum Sprint},
+  pdfauthor={Praktikumsgruppe},
+  pdfsubject={MIS und Unternehmenssoftware}
+]{hyperref}
+
+%% ---- Literatur ---------------------------------------------
+\usepackage[
+  backend=biber,
+  style=authoryear,
+  sorting=nyt,
+  maxbibnames=3
+]{biblatex}
+\addbibresource{literatur.bib}
+
+%% ---- Weitere Pakete ----------------------------------------
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{mdframed}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+%% ---- Abstandseinstellungen ---------------------------------
+\setstretch{1.3}
+\setlength{\parskip}{6pt}
+
+%% ---- Kapitelformatierung -----------------------------------
+\titleformat{\chapter}[block]
+  {\normalfont\LARGE\bfseries\color{hsPrimary}}
+  {\thechapter.}{1em}{}
+  [\vspace{2pt}\titlerule]
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+
+\titleformat{\section}[block]
+  {\normalfont\large\bfseries\color{hsPrimary!80!black}}
+  {\thesection}{1em}{}
+\titleformat{\subsection}[block]
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}{1em}{}
+
+%% ---- Infoboxen --------------------------------------------
+\newtcolorbox{infobox}[1][]{
+  enhanced, breakable,
+  colback=hsAccent, colframe=hsPrimary,
+  fonttitle=\bfseries, title={#1},
+  boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+}
+
+\newtcolorbox{warningbox}{
+  enhanced,
+  colback=orange!10, colframe=orange!70!black,
+  boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+}
+
+\newtcolorbox{successbox}{
+  enhanced,
+  colback=green!8, colframe=darkGreen,
+  boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+}
+
+%% ---- Checkmarks / Kreuze ----------------------------------
+\newcommand{\cmark}{\textcolor{darkGreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{darkRed}{\ding{55}}}
+
+%% ---- Abkürzungen ------------------------------------------
+\newcommand{\json}{\textsc{json}}
+\newcommand{\uml}{\textsc{uml}}
+\newcommand{\mis}{\textsc{mis}}
+\newcommand{\oop}{\textsc{oop}}
+\newcommand{\dod}{\textit{Definition of Done}}
+
+%% ============================================================
+\begin{document}
+
+%% ---- Deckblatt ---------------------------------------------
+\begin{titlepage}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[hsPrimary] (current page.north west) rectangle
+      ([yshift=-3.5cm] current page.north east);
+    \fill[hsPrimary!20] (current page.south west) rectangle
+      ([yshift=1.8cm] current page.south east);
+  \end{tikzpicture}
+
+  \vspace*{0.5cm}
+  \begin{center}
+    {\color{white}\Large\textbf{Hochschule}}\\[0.2cm]
+    {\color{white}\large Fachbereich Wirtschaftsinformatik}\\[0.2cm]
+    {\color{white}\normalsize Modul: MIS und Unternehmenssoftware}
+  \end{center}
+
+  \vspace{2.5cm}
+
+  \begin{center}
+    \begin{tcolorbox}[
+      enhanced,
+      colback=white, colframe=hsPrimary,
+      boxrule=1.5pt, arc=5pt,
+      width=0.88\textwidth,
+      left=15pt, right=15pt, top=12pt, bottom=12pt,
+    ]
+      \centering
+      {\huge\bfseries\color{hsPrimary} Vom Wasserfall zum Sprint}\\[0.5cm]
+      {\large Praktikumsdokumentation}\\[0.4cm]
+      \rule{0.6\textwidth}{0.4pt}\\[0.4cm]
+      {\normalsize\itshape Entwicklungsmodelle im Vergleich:}\\[0.2cm]
+      {\normalsize Wasserfallmodell und Scrum anhand eines}\\[0.2cm]
+      {\normalsize konsolenbasierten Elektroniklagerverwaltungssystems}
+    \end{tcolorbox}
+  \end{center}
+
+  \vspace{2.0cm}
+
+  \begin{center}
+    \begin{tabular}{ll}
+      \textbf{Veranstaltung:}  & MIS und Unternehmenssoftware \\[4pt]
+      \textbf{Semester:}       & Sommersemester 2025 \\[4pt]
+      \textbf{Abgabedatum:}    & 08. Mai 2025 \\[4pt]
+      \textbf{Betreuung:}      & Lehrveranstaltungsleitung \\[8pt]
+      \hline\\[-4pt]
+      \textbf{Gruppe:}         & Praktikumsgruppe 4 \\[4pt]
+      \textbf{Mitglieder:}     & Denise Louise Doumbouya \\[2pt]
+                               & Jonas Meier \\[2pt]
+                               & Priya Nambiar \\[4pt]
+      \textbf{Betreuer:}       & Prof.\ Dr.\ Andreas Hoffmann \\
+    \end{tabular}
+  \end{center}
+
+  \vfill
+  \begin{center}
+    {\small\color{gray} Praktikumsdokumentation eingereicht im Rahmen des Bachelor-Studiengangs\\
+    Wirtschaftsinformatik, Sommersemester 2025}
+  \end{center}
+\end{titlepage}
+
+%% ---- Ehrenwörtliche Erklärung ------------------------------
+\cleardoublepage
+\thispagestyle{empty}
+\vspace*{3cm}
+\begin{center}
+  \textbf{\large Ehrenwörtliche Erklärung}
+\end{center}
+\vspace{1cm}
+Wir erklären hiermit ehrenwörtlich, dass wir die vorliegende Praktikumsdokumentation selbstständig
+und ohne fremde Hilfe angefertigt haben. Alle Stellen, die wörtlich oder sinngemäß aus
+veröffentlichten oder unveröffentlichten Quellen entnommen wurden, sind als solche kenntlich gemacht.
+
+\vspace{2cm}
+\begin{flushleft}
+  Ort, Datum: \underline{\hspace{6cm}} \\[1.5cm]
+  Unterschriften: \\[2cm]
+  \begin{tabular}{p{5cm} p{5cm}}
+    \rule{4.5cm}{0.4pt} & \rule{4.5cm}{0.4pt} \\
+    Denise L.\ Doumbouya & Jonas Meier \\[1.5cm]
+    \multicolumn{2}{l}{\rule{4.5cm}{0.4pt}} \\
+    \multicolumn{2}{l}{Priya Nambiar}
+  \end{tabular}
+\end{flushleft}
+
+%% ---- Inhaltsverzeichnis ------------------------------------
+\cleardoublepage
+\tableofcontents
+
+%% ---- Abbildungsverzeichnis ---------------------------------
+\cleardoublepage
+\listoffigures
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+
+%% ---- Tabellenverzeichnis -----------------------------------
+\cleardoublepage
+\listoftables
+\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+
+%% ============================================================
+%%  KAPITEL 1: EINLEITUNG
+%% ============================================================
+\cleardoublepage
+\chapter{Einleitung}
+\label{chap:einleitung}
+
+Softwareentwicklungsprojekte scheitern häufig nicht an einem Mangel an technischem Know-how,
+sondern an ungeeigneten Entwicklungsprozessen. Die Standish-Group dokumentiert in ihren
+regelmäßig erscheinenden Chaos-Reports, dass ein erheblicher Anteil von IT-Projekten die
+vereinbarten Zeit-, Budget- und Qualitätsziele verfehlt~\autocite{standish2020}.
+Dieser Befund macht die Wahl des richtigen Entwicklungsmodells zu einer zentralen
+ingenieurwissenschaftlichen Entscheidung.
+
+Im Rahmen des Praktikums \textit{MIS und Unternehmenssoftware} wurden zwei der wirkungsmächtigsten
+Paradigmen der Softwareentwicklung gegenübergestellt: das klassische \textbf{Wasserfallmodell}
+nach Royce~\autocite{royce1970} und das agile \textbf{Scrum-Framework}~\autocite{schwaber2020}.
+Der gewählte Anwendungskontext ist ein \textit{konsolenbasiertes Elektroniklagerverwaltungssystem}
+in Java, das die typischen Anforderungen eines mittelständischen Elektronikhändlers abbildet:
+Bestandsführung, Mindestbestandsüberwachung, Datenpersistenz und nutzerfreundliche
+Konsoleninteraktion.
+
+\section{Motivation und Problemstellung}
+
+Die Frage, welches Entwicklungsmodell für ein konkretes Projekt geeignet ist, lässt sich nicht
+abstrakt beantworten. Sie erfordert die praktische Erfahrung beider Ansätze. Genau diese
+Erfahrung war das didaktische Ziel dieses Praktikums: Das System wurde zunächst vollständig
+nach dem Wasserfallmodell geplant und implementiert; anschließend wurde es in zwei Scrum-Sprints
+iterativ erweitert und auf Basis echten Kundenfeedbacks überarbeitet.
+
+Der entscheidende Erkenntnismoment trat im Sprint Review nach Sprint~1 ein: Der simulierte
+Auftraggeber \textemdash{} repräsentiert durch die Lehrveranstaltungsleitung in der Rolle des
+Product Owners \textemdash{} wünschte eine strukturelle Änderung des Ausgabeformats (\json{}
+statt \textsc{csv}), englischsprachige Labels für die spätere internationale Nutzung sowie
+eine klarere Klassenarchitektur. Diese Änderungswünsche hätten im Wasserfallmodell erheblichen
+Mehraufwand bedeutet; im Scrum-Kontext wurden sie ohne Prozessbruch in Sprint~2 aufgenommen.
+
+\section{Aufbau der Dokumentation}
+
+Die vorliegende Dokumentation gliedert sich wie folgt: Kapitel~\ref{chap:projektbeschreibung}
+und~\ref{chap:zielsetzung} beschreiben das Projektvorhaben und die Zielsetzung.
+Kapitel~\ref{chap:anforderungen} enthält die Anforderungsanalyse.
+Die Kapitel~\ref{chap:entwicklungsmodelle} bis~\ref{chap:scrum} erläutern die theoretischen
+Grundlagen beider Entwicklungsmodelle. Die Scrum-Artefakte und der konkrete Projektverlauf
+werden in den Kapiteln~\ref{chap:backlog} bis~\ref{chap:review} dokumentiert.
+Die technische Umsetzung findet sich in den Kapiteln~\ref{chap:architektur}
+und~\ref{chap:implementierung}. Qualitätssicherung und Testkonzept behandelt
+Kapitel~\ref{chap:tests}. Den Abschluss bilden der Modellvergleich (Kapitel~\ref{chap:vergleich}),
+die Reflexion (Kapitel~\ref{chap:reflexion}) und das Fazit (Kapitel~\ref{chap:fazit}).
+
+%% ============================================================
+%%  KAPITEL 2: PROJEKTBESCHREIBUNG
+%% ============================================================
+\chapter{Projektbeschreibung}
+\label{chap:projektbeschreibung}
+
+\section{Ausgangssituation und Aufgabenstellung}
+
+Die fiktive Firma \textit{ElektroTech GmbH} betreibt ein mittelgroßes Elektroniklager und
+verwaltet ihren Bestand bislang ausschließlich über Tabellenkalkulationen. Ziel des Praktikums
+war es, für diese Firma ein einfaches, aber robustes Bestandsverwaltungssystem zu entwickeln,
+das auf der Konsole läuft und keine externe Datenbankinfrastruktur voraussetzt.
+
+Die Vorgabe der Lehrveranstaltung sah explizit vor, denselben fachlichen Anwendungsfall
+zweimal zu durchlaufen: einmal plangetrieben nach dem Wasserfallmodell und einmal iterativ
+mit Scrum. Dadurch sollte die Gruppe die Unterschiede beider Ansätze nicht nur theoretisch
+verstehen, sondern am eigenen Entwicklungsprozess erleben.
+
+\section{Systemüberblick}
+
+Das System verwaltet sechs Produktkategorien des Elektronikbereichs:
+
+\begin{table}[H]
+  \centering
+  \caption{Verwaltete Produktkategorien des Elektroniklagers}
+  \label{tab:kategorien}
+  \begin{tabularx}{0.75\textwidth}{C{0.5cm} L{3.5cm} L{6cm}}
+    \toprule
+    \textbf{\#} & \textbf{Kategorie} & \textbf{Repräsentatives Artikel-Beispiel} \\
+    \midrule
+    1 & Monitor     & Dell UltraSharp 27\textquotedbl{} 4K, 599,00\,€ \\
+    2 & SSD         & Samsung 980 Pro 1TB, 89,99\,€ \\
+    3 & Router      & ASUS RT-AX88U WiFi~6, 229,00\,€ \\
+    4 & Tastatur    & Logitech MX Keys, 99,00\,€ \\
+    5 & Laptop      & Lenovo ThinkPad X1 Carbon, 1.499,00\,€ \\
+    6 & Grafikkarte & NVIDIA GeForce RTX~4070, 649,00\,€ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Jeder Artikel wird durch folgende Attribute beschrieben:
+
+\begin{table}[H]
+  \centering
+  \caption{Datenmodell eines Lagerartikels}
+  \label{tab:datenmodell}
+  \begin{tabularx}{\textwidth}{L{2.5cm} L{2.5cm} L{6.5cm} C{2cm}}
+    \toprule
+    \textbf{Attribut} & \textbf{Typ} & \textbf{Beschreibung} & \textbf{Pflicht} \\
+    \midrule
+    \texttt{id}       & \texttt{int}    & Eindeutiger, auto-inkrementierter Bezeichner & \cmark \\
+    \texttt{name}     & \texttt{String} & Artikelbezeichnung (englisches Label)         & \cmark \\
+    \texttt{quantity} & \texttt{int}    & Aktueller Lagerbestand (Stückzahl)            & \cmark \\
+    \texttt{minimum}  & \texttt{int}    & Mindestbestand; löst Warnung aus              & \cmark \\
+    \texttt{price}    & \texttt{double} & Verkaufspreis in Euro                         & \cmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Technischer Rahmen}
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Programmiersprache:} Java~17 (LTS)
+  \item \textbf{Build-System:} Maven~3.9
+  \item \textbf{Versionskontrolle:} Git (lokales Repository)
+  \item \textbf{Persistenz:} \json{}-Datei (\texttt{warehouse.json})
+  \item \textbf{Externe Bibliotheken:} \texttt{com.google.code.gson} 2.10.1 (JSON-Serialisierung)
+  \item \textbf{Entwicklungsumgebung:} IntelliJ IDEA Community Edition
+  \item \textbf{Betriebssystem:} Windows~11 / macOS Sonoma (cross-platform)
+  \item \textbf{Testframework:} JUnit~5
+\end{itemize}
+
+\section{Projektorganisation}
+
+Die Gruppe bestand aus drei Studierenden mit folgenden Scrum-Rollen:
+
+\begin{table}[H]
+  \centering
+  \caption{Rollenverteilung im Scrum-Team}
+  \label{tab:rollen}
+  \begin{tabularx}{0.85\textwidth}{L{4cm} L{3.5cm} L{5cm}}
+    \toprule
+    \textbf{Name} & \textbf{Rolle} & \textbf{Verantwortung} \\
+    \midrule
+    Denise L.\ Doumbouya & Scrum Master     & Prozessverantwortung, Sprint-Moderation \\
+    Jonas Meier          & Entwickler       & Kernimplementierung, Klassenarchitektur \\
+    Priya Nambiar        & Entwicklerin     & JSON-Export, Tests, Fehlerbehandlung \\
+    \midrule
+    Lehrveranstaltung    & Product Owner    & Anforderungen, Sprint Review, Feedback \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+%% ============================================================
+%%  KAPITEL 3: ZIELSETZUNG
+%% ============================================================
+\chapter{Zielsetzung}
+\label{chap:zielsetzung}
+
+\section{Fachliche Ziele}
+
+Das primäre fachliche Ziel war die Entwicklung eines funktionsfähigen
+Elektroniklagerverwaltungssystems, das die Grundoperationen der Bestandsführung vollständig
+abdeckt. Im Einzelnen wurden folgende Funktionsziele definiert:
+
+\begin{enumerate}[leftmargin=1.5em, label=\textbf{F\arabic*.}]
+  \item Das System ermöglicht das Anlegen neuer Artikel mit allen Pflichtattributen.
+  \item Bestehende Artikel können über ein nummeriertes Konsolenmenü angezeigt werden.
+  \item Der Bestand eines Artikels kann sowohl erhöht als auch verringert werden.
+  \item Negative Lagerbestände werden systemseitig abgefangen und verhindert.
+  \item Bei Unterschreitung des artikelspezifischen Mindestbestands wird eine
+        Konsolenwarnung ausgegeben.
+  \item Der aktuelle Lagerbestand kann in eine \json{}-Datei exportiert werden.
+  \item Alle Benutzerinteraktionen erfolgen über ein englischsprachiges Konsolenmenü.
+\end{enumerate}
+
+\section{Methodische Ziele}
+
+Neben den fachlichen Zielen verfolgte das Praktikum explizit methodische Lernziele:
+
+\begin{enumerate}[leftmargin=1.5em, label=\textbf{M\arabic*.}]
+  \item Die Studierenden erfahren den vollständigen Wasserfallzyklus (Anforderung \textrightarrow{}
+        Design \textrightarrow{} Implementierung \textrightarrow{} Test \textrightarrow{} Übergabe)
+        am eigenen Projekt.
+  \item Die Studierenden erleben Scrum als gelebten Prozess mit echten Artefakten (Product Backlog,
+        Sprint Backlog, Increment).
+  \item Die Gruppe reflektiert, an welchen Stellen das Wasserfallmodell zu
+        \textit{Entwicklung am Kunden vorbei} führt.
+  \item Die Studierenden bewerten eigenständig, welches Modell für welchen Projektkontext geeignet
+        ist.
+\end{enumerate}
+
+\section{Qualitative Ziele}
+
+\begin{infobox}[Qualitätskriterien laut Lehrveranstaltungsvorgabe]
+  Sauberkeit des Codes (Clean Code nach Robert C.\ Martin), Vollständigkeit der Fehlerbehandlung,
+  Nachvollziehbarkeit der Commit-Historie, Detailtiefe der Reflexion sowie die kritische
+  Auseinandersetzung mit beiden Entwicklungsmodellen wurden als Bewertungskriterien festgelegt.
+\end{infobox}
+
+%% ============================================================
+%%  KAPITEL 4: ANFORDERUNGSANALYSE
+%% ============================================================
+\chapter{Anforderungsanalyse}
+\label{chap:anforderungen}
+
+\section{Methodik der Anforderungserhebung}
+
+Die Anforderungserhebung verlief in beiden Modellen unterschiedlich. Im Wasserfallmodell
+wurden die Anforderungen in einer einzigen Sitzung vollständig erhoben und in einem
+Pflichtenheft fixiert. Im Scrum-Kontext entstanden die Anforderungen iterativ: Eine erste
+Version des Product Backlogs wurde gemeinsam mit dem Product Owner erstellt und nach dem
+Sprint Review von Sprint~1 auf Basis des Feedbacks verfeinert.
+
+\section{Funktionale Anforderungen}
+
+\begin{longtable}{L{1cm} L{4.5cm} L{6cm} C{1.5cm} C{1.5cm}}
+  \caption{Vollständige Liste der funktionalen Anforderungen}
+  \label{tab:fanforderungen} \\
+  \toprule
+  \textbf{ID} & \textbf{Anforderung} & \textbf{Akzeptanzkriterium} & \textbf{Prio.} & \textbf{Sprint} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{5}{c}{\tablename~\thetable{} (Fortsetzung)} \\
+  \toprule
+  \textbf{ID} & \textbf{Anforderung} & \textbf{Akzeptanzkriterium} & \textbf{Prio.} & \textbf{Sprint} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{5}{r}{\textit{Fortsetzung nächste Seite}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  FA-01 & Artikel anlegen & Artikel erscheint in der Liste mit korrekten Attributen & Hoch & S1 \\
+  FA-02 & Artikel anzeigen & Alle Artikel werden tabellarisch in der Konsole ausgegeben & Hoch & S1 \\
+  FA-03 & Bestand erhöhen & Eingabe einer positiven Zahl erhöht \texttt{quantity} korrekt & Hoch & S1 \\
+  FA-04 & Bestand verringern & Eingabe einer positiven Zahl verringert \texttt{quantity} & Hoch & S1 \\
+  FA-05 & Negativbestand verhindern & System gibt Fehlermeldung aus; Bestand bleibt unverändert & Hoch & S1 \\
+  FA-06 & Mindestbestandswarnung & Bei \texttt{quantity < minimum} erscheint Warnung in der Konsole & Mittel & S1 \\
+  FA-07 & JSON-Export & Datei \texttt{warehouse.json} wird korrekt erzeugt & Hoch & S2 \\
+  FA-08 & Englische Labels & Alle Menüpunkte und Ausgaben auf Englisch & Mittel & S2 \\
+  FA-09 & Konsolenmenü & Nummernbasiertes Menü mit Eingabevalidierung & Hoch & S1 \\
+  FA-10 & OOP-Struktur & Trennung von Modell, Logik und Präsentation & Mittel & S2 \\
+\end{longtable}
+
+\section{Nicht-funktionale Anforderungen}
+
+\begin{table}[H]
+  \centering
+  \caption{Nicht-funktionale Anforderungen}
+  \label{tab:nfanforderungen}
+  \begin{tabularx}{\textwidth}{L{1cm} L{3.5cm} L{8.5cm}}
+    \toprule
+    \textbf{ID} & \textbf{Kategorie} & \textbf{Anforderung} \\
+    \midrule
+    NF-01 & Portabilität   & Lauffähig unter Windows und macOS ohne Konfigurationsänderungen \\
+    NF-02 & Wartbarkeit    & Klare Paketstruktur; jede Klasse hat genau eine Verantwortlichkeit \\
+    NF-03 & Robustheit     & Fehlerhafte Konsoleneingaben führen nicht zum Programmabsturz \\
+    NF-04 & Lesbarkeit     & Sprechende Bezeichner; keine Magic Numbers \\
+    NF-05 & Erweiterbarkeit & Neue Artikelkategorien können ohne Architekturänderung hinzugefügt werden \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Abgrenzung des Systems}
+
+Das System umfasst bewusst keine persistente Datenbankanbindung, keine grafische
+Benutzeroberfläche und keine Netzwerkfunktionalität. Diese Abgrenzung ist praxismotiviert:
+Die Anforderungen eines realen Kleinstlagers in der Frühphase der Digitalisierung rechtfertigen
+keine Datenbankinfrastruktur. Der \json{}-Export bildet eine solide Brücke zu späteren
+Erweiterungsstufen.
+
+%% ============================================================
+%%  KAPITEL 5: ENTWICKLUNGSMODELLE
+%% ============================================================
+\chapter{Entwicklungsmodelle im Überblick}
+\label{chap:entwicklungsmodelle}
+
+Software Engineering kennt eine Vielzahl von Prozessmodellen, die sich in ihrem Umgang mit
+Veränderung, Unsicherheit und Kundeninteraktion fundamental unterscheiden. Für das vorliegende
+Praktikum wurden zwei prototypische Vertreter ausgewählt: das sequenzielle \textbf{Wasserfallmodell}
+als paradigmatisches Beispiel plangetriebener Entwicklung und \textbf{Scrum} als prominentester
+Vertreter agiler Rahmenwerke.
+
+Die Gegenüberstellung ist in der Praxis relevant, weil viele Unternehmen aus klassischen
+Entwicklungsstrukturen kommen und den Wechsel in agile Prozesse vollziehen müssen. Das Praktikum
+simuliert genau diesen Übergang \textendash{} vom Wasserfall zum Sprint.
+
+%% ============================================================
+%%  KAPITEL 6: WASSERFALLMODELL
+%% ============================================================
+\chapter{Wasserfallmodell}
+\label{chap:wasserfall}
+
+\section{Theoretische Grundlagen}
+
+Das Wasserfallmodell wurde 1970 von Winston Royce in seinem wegweisenden Paper
+\textit{Managing the Development of Large Software Systems} beschrieben, obwohl Royce es
+selbst als unzulänglich für reale Projekte bezeichnete~\autocite{royce1970}. In der
+industriellen Praxis wurde es dennoch zum dominierenden Entwicklungsparadigma der 1970er
+bis 1990er Jahre.
+
+Das Modell gliedert die Softwareentwicklung in streng sequenzielle Phasen:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    node distance = 0.4cm,
+    phase/.style = {
+      rectangle, rounded corners=4pt,
+      minimum width=7cm, minimum height=0.9cm,
+      text centered, font=\small\bfseries,
+      fill=hsPrimary, text=white, draw=hsPrimary!80!black
+    },
+    arrow/.style = {-{Stealth[length=6pt]}, thick, color=hsPrimary!60}
+  ]
+    \node[phase] (req)   {1. Anforderungsanalyse (Requirements)};
+    \node[phase, below=of req, fill=hsPrimary!80] (des) {2. Systemdesign (Design)};
+    \node[phase, below=of des, fill=hsPrimary!65] (imp) {3. Implementierung (Implementation)};
+    \node[phase, below=of imp, fill=hsPrimary!50] (tes) {4. Test \& Integration (Testing)};
+    \node[phase, below=of tes, fill=hsPrimary!35, text=black] (dep) {5. Deployment \& Wartung};
+
+    \draw[arrow] (req.south) -- (des.north);
+    \draw[arrow] (des.south) -- (imp.north);
+    \draw[arrow] (imp.south) -- (tes.north);
+    \draw[arrow] (tes.south) -- (dep.north);
+
+    \node[right=0.5cm of req, font=\tiny, align=left, color=gray] {Pflichtenheft, Use Cases};
+    \node[right=0.5cm of des, font=\tiny, align=left, color=gray] {Architektur, UML};
+    \node[right=0.5cm of imp, font=\tiny, align=left, color=gray] {Coding, Unit Tests};
+    \node[right=0.5cm of tes, font=\tiny, align=left, color=gray] {Integrationstests, UAT};
+    \node[right=0.5cm of dep, font=\tiny, align=left, color=gray] {Release, Dokumentation};
+  \end{tikzpicture}
+  \caption{Phasenmodell des klassischen Wasserfallmodells}
+  \label{fig:wasserfall}
+\end{figure}
+
+\section{Anwendung im Praktikum}
+
+Im ersten Teil des Praktikums wurde das Lager\-verwaltungs\-system vollständig nach dem
+Wasserfallmodell entwickelt. Dies bedeutete konkret:
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Phase 1 \textendash{} Anforderungsanalyse (Tag 1--2):] Alle Anforderungen wurden in
+    einem gemeinsamen Sitzungsprotokoll festgehalten. Das Ergebnis war ein vollständiges,
+    aber statisches Anforderungsdokument. Kein Raum für spätere Änderungen war vorgesehen.
+
+  \item[Phase 2 \textendash{} Design (Tag 3):] \uml{}-Klassendiagramm, Paketstruktur und
+    Datenmodell wurden festgelegt. Zu diesem Zeitpunkt war das Ausgabeformat als
+    \textsc{csv} spezifiziert \textendash{} eine Entscheidung, die sich später als
+    Fehlgriff herausstellen sollte.
+
+  \item[Phase 3 \textendash{} Implementierung (Tag 4--7):] Die Klassen \texttt{Item},
+    \texttt{Warehouse} und \texttt{Main} wurden implementiert. Der Code folgte strikt
+    dem im Design festgelegten Plan.
+
+  \item[Phase 4 \textendash{} Test (Tag 8):] Manuelle Funktionstests wurden durchgeführt
+    und in einer Testprotokoll-Tabelle dokumentiert.
+
+  \item[Phase 5 \textendash{} Übergabe (Tag 9):] Das fertige System wurde dem Product Owner
+    präsentiert.
+\end{description}
+
+\section{Probleme im Wasserfallprojekt}
+\label{sec:wasserfall-probleme}
+
+Die Präsentation des Wasserfall-Ergebnisses offenbarte strukturelle Schwächen:
+
+\begin{warningbox}
+  \textbf{Kritischer Befund:} Das \textsc{csv}-Format entsprach nicht den Vorstellungen des
+  Auftraggebers. Die deutschen Menü-Labels waren für den international geplanten Einsatz
+  ungeeignet. Die \texttt{Main}-Klasse enthielt mehr als 250 Zeilen und verletzte das
+  \textit{Single Responsibility Principle}. Diese Mängel waren \textbf{nicht in letzter Minute
+  behebbar}, da das Modell keine eingebaute Feedback-Schleife vorsieht.
+\end{warningbox}
+
+Diese Erfahrung illustriert das klassische Wasserfallproblem: Kundenwünsche, die sich erst
+beim Anblick eines lauffähigen Systems konkretisieren, können im sequenziellen Prozess nicht
+mehr kosteneffizient integriert werden.
+
+%% ============================================================
+%%  KAPITEL 7: AGILE ENTWICKLUNG
+%% ============================================================
+\chapter{Agile Entwicklung}
+\label{chap:agil}
+
+\section{Das Agile Manifest}
+
+Im Jahr 2001 formulierten 17 erfahrene Softwareentwickler das \textit{Agile Manifesto}~\autocite{beck2001}.
+Es proklamiert vier Grundwerte:
+
+\begin{tcolorbox}[
+  enhanced, breakable,
+  colback=hsAccent!60, colframe=hsPrimary,
+  title={\textbf{Die vier Werte des Agilen Manifests}},
+  fonttitle=\bfseries, boxrule=1pt, arc=4pt
+]
+  \begin{enumerate}[label=\arabic*., leftmargin=1.5em]
+    \item \textbf{Individuen und Interaktionen} über Prozesse und Werkzeuge
+    \item \textbf{Funktionierende Software} über umfassende Dokumentation
+    \item \textbf{Zusammenarbeit mit dem Kunden} über Vertragsverhandlung
+    \item \textbf{Reagieren auf Veränderung} über das Befolgen eines Plans
+  \end{enumerate}
+  \vspace{6pt}
+  \textit{Wobei die rechten Punkte durchaus Wert haben, die linken aber höher geschätzt werden.}
+\end{tcolorbox}
+
+\section{Agile Werte im Praktikumskontext}
+\label{chap:agilewerte}
+
+Die vier Manifest-Werte materialisieren sich im vorliegenden Praktikum wie folgt:
+
+\paragraph{Individuen und Interaktionen:}
+Anstelle starrer Rollentrennungen arbeiteten alle Gruppenmitglieder eng zusammen. Tägliche
+Kurzabstimmungen (Daily Standup) \textendash{} auch wenn nur per Nachrichtengruppe durchgeführt
+\textendash{} ersetzten formale Statusberichte.
+
+\paragraph{Funktionierende Software:}
+Das Ziel jedes Sprints war ein ausführbares, testbares Inkrement, kein Dokument. Nach Sprint~1
+konnte der Product Owner das System tatsächlich starten und testen.
+
+\paragraph{Zusammenarbeit mit dem Kunden:}
+Das Sprint Review nach Sprint~1 ermöglichte echte Interaktion mit dem Product Owner.
+Dessen Feedback (\json{} statt \textsc{csv}, englische Labels) wurde direkt in den
+Sprint-2-Backlog überführt.
+
+\paragraph{Reagieren auf Veränderung:}
+Das Team akzeptierte die Änderungswünsche nach Sprint~1 ohne Mehrkosten-Diskussion und
+priorisierte entsprechend im Sprint~2.
+
+%% ============================================================
+%%  KAPITEL 8: SCRUM-KONZEPT
+%% ============================================================
+\chapter{Scrum-Konzept}
+\label{chap:scrum}
+
+\section{Grundlagen}
+
+Scrum ist ein leichtgewichtiges Rahmenwerk zur Entwicklung, Lieferung und Aufrechterhaltung
+komplexer Produkte~\autocite{schwaber2020}. Es basiert auf drei Säulen:
+\textbf{Transparenz}, \textbf{Inspektion} und \textbf{Adaption}.
+
+Scrum definiert fünf Ereignisse, drei Artefakte und drei Rollen:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    box/.style={rectangle, rounded corners=3pt, minimum width=2.8cm, minimum height=0.8cm,
+                text centered, font=\footnotesize\bfseries, draw=hsPrimary, thick},
+    arr/.style={-{Stealth}, thick, color=hsPrimary},
+    lbl/.style={font=\scriptsize, color=gray}
+  ]
+    \node[box, fill=hsPrimary!15] (pb)   at (0,0)     {Product Backlog};
+    \node[box, fill=hsPrimary!30] (sp)   at (3.8,0)   {Sprint Planning};
+    \node[box, fill=hsPrimary!45] (sb)   at (7.6,0)   {Sprint Backlog};
+    \node[box, fill=hsPrimary!60, text=white] (sprint) at (7.6,-2) {Sprint (1--4 Wo.)};
+    \node[box, fill=hsPrimary!45] (inc)  at (3.8,-2)  {Inkrement};
+    \node[box, fill=hsPrimary!30] (rev)  at (0,-2)    {Review \& Retro};
+
+    \draw[arr] (pb)  -- (sp);
+    \draw[arr] (sp)  -- (sb);
+    \draw[arr] (sb)  -- (sprint);
+    \draw[arr] (sprint) -- (inc);
+    \draw[arr] (inc) -- (rev);
+    \draw[arr] (rev.north) |- ([yshift=0.6cm]pb.north) -| (pb.north);
+
+    \node[lbl, above=0.1cm of pb]   {Priorisierung};
+    \node[lbl, above=0.1cm of sp]   {Selektion};
+    \node[lbl, above=0.1cm of sb]   {Aufgabenplanung};
+    \node[lbl, right=0.1cm of sprint] {Daily Scrum};
+    \node[lbl, below=0.1cm of inc]  {Nutzerwertt};
+    \node[lbl, below=0.1cm of rev]  {Feedback};
+  \end{tikzpicture}
+  \caption{Scrum-Zyklus mit Artefakten und Ereignissen}
+  \label{fig:scrum}
+\end{figure}
+
+\section{Rollen}
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Product Owner:] Verantwortlich für den maximalen Produktwert. Verwaltet und priorisiert
+    das Product Backlog. Im Praktikum: Lehrveranstaltungsleitung.
+
+  \item[Scrum Master:] Dienende Führungskraft, die Hindernisse beseitigt und den Scrum-Prozess
+    schützt. Im Praktikum: Denise L.\ Doumbouya.
+
+  \item[Development Team:] Selbstorganisiertes, cross-funktionales Team mit voller
+    Implementierungsverantwortung. Im Praktikum: alle drei Gruppenmitglieder.
+\end{description}
+
+\section{Sprint-Länge und Ereignisse im Praktikum}
+
+Aufgrund des Semesterrahmens wurden Sprints auf jeweils \textbf{eine Woche} festgelegt.
+Daily Scrums fanden täglich als Kurzabstimmung (max.\ 15~Minuten) statt. Sprint Planning,
+Sprint Review und Sprint Retrospektive folgten dem Scrum-Leitfaden, wurden jedoch auf
+die praktischen Rahmenbedingungen der Lehrveranstaltung angepasst.
+
+%% ============================================================
+%%  KAPITEL 9: PRODUCT BACKLOG
+%% ============================================================
+\chapter{Product Backlog}
+\label{chap:backlog}
+
+\section{Initialer Product Backlog}
+
+Der initiale Product Backlog wurde gemeinsam mit dem Product Owner in einer
+Backlog-Refinement-Session erarbeitet. Die Priorisierung erfolgte nach dem
+\textit{MoSCoW}-Verfahren: Must-have, Should-have, Could-have, Won't-have.
+
+\begin{table}[H]
+  \centering
+  \caption{Product Backlog (nach erstem Refinement)}
+  \label{tab:backlog}
+  \begin{tabularx}{\textwidth}{C{0.7cm} L{5.5cm} C{2cm} C{2cm} C{1.5cm}}
+    \toprule
+    \textbf{ID} & \textbf{User Story} & \textbf{Prio.} & \textbf{Story Points} & \textbf{Sprint} \\
+    \midrule
+    US-01 & Als Lagermitarbeiter möchte ich neue Artikel anlegen, damit der Bestand vollständig ist.
+           & Must & 3 & S1 \\
+    US-02 & Als Lagermitarbeiter möchte ich alle Artikel anzeigen, damit ich den Überblick behalte.
+           & Must & 2 & S1 \\
+    US-03 & Als Lagermitarbeiter möchte ich den Bestand erhöhen, damit Wareneingänge erfasst werden.
+           & Must & 2 & S1 \\
+    US-04 & Als Lagermitarbeiter möchte ich den Bestand verringern, damit Warenabgänge erfasst werden.
+           & Must & 2 & S1 \\
+    US-05 & Als Manager möchte ich gewarnt werden, wenn Artikel den Mindestbestand unterschreiten.
+           & Must & 3 & S1 \\
+    US-06 & Als System-Administrator möchte ich den Bestand als Datei exportieren.
+           & Should & 5 & S2 \\
+    US-07 & Als internationaler Nutzer möchte ich englische Menütexte verwenden.
+           & Should & 2 & S2 \\
+    US-08 & Als Entwickler möchte ich eine saubere OOP-Struktur, damit der Code erweiterbar bleibt.
+           & Should & 4 & S2 \\
+    US-09 & Als Nutzer möchte ich fehlerhafte Eingaben abfangen, um Abstürze zu vermeiden.
+           & Must & 3 & S1 \\
+    \midrule
+    & \textbf{Gesamt} & & \textbf{26} & \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Backlog-Refinement nach Sprint~1}
+
+Nach dem Sprint Review von Sprint~1 wurde der Backlog substanziell überarbeitet.
+Der Product Owner ergänzte drei neue Items und erhöhte die Priorität des JSON-Exports:
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog-Änderungen nach Sprint-1-Review}
+  \label{tab:backlog-changes}
+  \begin{tabularx}{\textwidth}{C{0.7cm} L{5.5cm} L{4.5cm} C{1.8cm}}
+    \toprule
+    \textbf{ID} & \textbf{Änderung} & \textbf{Begründung (Product Owner)} & \textbf{Aktion} \\
+    \midrule
+    US-06 & CSV \textrightarrow{} JSON als Export-Format & Standardformat; besser integrierbar & Angepasst \\
+    US-07 & Priorität Must (war Should) & Internationaler Rollout geplant & Eskaliert \\
+    US-08 & Klassen: Model/Service/UI-Trennung & Wartbarkeit für zukünftige Entwickler & Konkretisiert \\
+    US-10 & Bestands-Summary mit Gesamtwert & Kaufmännische Kontrolle & Neu \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+%% ============================================================
+%%  KAPITEL 10: SPRINTPLANUNG
+%% ============================================================
+\chapter{Sprintplanung}
+\label{chap:sprintplanung}
+
+\section{Sprint 1 \textendash{} Planung}
+
+\textbf{Sprint-Ziel:} \textit{Ein lauffähiges Konsolenmenü mit vollständiger Artikelverwaltung
+und Bestandsänderung ist fertiggestellt und testbar.}
+
+Das Team nahm im Sprint Planning 16 Story Points aus dem Product Backlog in den Sprint~1-Backlog
+auf. Die Velocity wurde für den ersten Sprint konservativ geschätzt, da das Team noch keine
+gemeinsame Arbeitsgeschwindigkeit kannte.
+
+\begin{table}[H]
+  \centering
+  \caption{Sprint-1-Backlog mit Aufgabenverteilung}
+  \label{tab:sprint1}
+  \begin{tabularx}{\textwidth}{C{0.7cm} L{4.5cm} L{3.5cm} C{1.5cm} C{2.5cm}}
+    \toprule
+    \textbf{ID} & \textbf{Aufgabe} & \textbf{Verantwortung} & \textbf{SP} & \textbf{Status (EOD)} \\
+    \midrule
+    T-01 & Klasse \texttt{Item} modellieren    & Jonas        & 2 & \cmark{} Done \\
+    T-02 & Klasse \texttt{Warehouse} modellieren & Jonas      & 3 & \cmark{} Done \\
+    T-03 & Konsolenmenü (\texttt{ConsoleUI})   & Denise       & 3 & \cmark{} Done \\
+    T-04 & Bestand erhöhen / verringern        & Jonas        & 2 & \cmark{} Done \\
+    T-05 & Negativbestand-Guard                & Priya        & 2 & \cmark{} Done \\
+    T-06 & Mindestbestandswarnung              & Priya        & 2 & \cmark{} Done \\
+    T-07 & Eingabe-Validierung (try-catch)     & Priya        & 2 & \cmark{} Done \\
+    \midrule
+    & \textbf{Gesamt}                          &              & \textbf{16} & \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Technische Entscheidungen in Sprint 1}
+
+Im Sprint Planning wurde bewusst entschieden, die Klasse \texttt{Warehouse} als
+\texttt{ArrayList<Item>} zu implementieren. Eine \texttt{HashMap}-basierte Struktur
+wurde diskutiert, aber verworfen, da Iterationsreihenfolge für die Konsolenausgabe
+wichtiger war als O(1)-Zugriff per Schlüssel.
+
+Außerdem wurde festgelegt, die Menüsteuerung in einer separaten \texttt{ConsoleUI}-Klasse
+zu kapseln, um die \texttt{Main}-Klasse schlank zu halten. Diese Entscheidung war in
+Sprint~1 noch nicht konsequent umgesetzt, was im Review angemahnt wurde.
+
+\section{Sprint 2 \textendash{} Planung}
+
+\textbf{Sprint-Ziel:} \textit{Das System wird um JSON-Export, englische Labels und eine
+klare Model-Service-UI-Architektur erweitert. Die Erkenntnisse aus dem Sprint-1-Review
+sind vollständig umgesetzt.}
+
+\begin{table}[H]
+  \centering
+  \caption{Sprint-2-Backlog mit Aufgabenverteilung}
+  \label{tab:sprint2}
+  \begin{tabularx}{\textwidth}{C{0.7cm} L{4.5cm} L{3.5cm} C{1.5cm} C{2.5cm}}
+    \toprule
+    \textbf{ID} & \textbf{Aufgabe} & \textbf{Verantwortung} & \textbf{SP} & \textbf{Status (EOD)} \\
+    \midrule
+    T-08 & \texttt{JsonExporter}-Klasse implementieren   & Priya  & 5 & \cmark{} Done \\
+    T-09 & Gson-Dependency in \texttt{pom.xml} einbinden & Jonas  & 1 & \cmark{} Done \\
+    T-10 & Alle Labels auf Englisch umstellen            & Denise & 2 & \cmark{} Done \\
+    T-11 & \texttt{WarehouseService}-Klasse extrahieren  & Jonas  & 3 & \cmark{} Done \\
+    T-12 & Refactoring \texttt{ConsoleUI}                & Denise & 2 & \cmark{} Done \\
+    T-13 & Bestands-Summary (Gesamtwert)                 & Jonas  & 2 & \cmark{} Done \\
+    T-14 & JUnit-Testfälle für Kernlogik                 & Priya  & 3 & \cmark{} Done \\
+    \midrule
+    & \textbf{Gesamt}                                    &        & \textbf{18} & \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Technische Entscheidungen in Sprint 2}
+
+Die wohl wichtigste Architekturentscheidung in Sprint~2 war die Einführung der Klasse
+\texttt{WarehouseService}. Im Wasserfall-Prototyp und noch in Sprint~1 war die
+Geschäftslogik direkt in \texttt{Warehouse} (dem Datenmodell) verankert. Dieser Verstoß
+gegen das \textit{Single Responsibility Principle} führte zu einem schwer testbaren,
+eng gekoppelten Entwurf. Die Trennung in Datenklasse (\texttt{Item}), Repository
+(\texttt{Warehouse}), Service (\texttt{WarehouseService}) und Präsentation
+(\texttt{ConsoleUI}) folgte dem Prinzip der \textit{Separation of Concerns} und verbesserte
+die Testbarkeit erheblich.
+
+Für die JSON-Serialisierung wurde Googles \textsc{Gson}-Bibliothek gewählt, da sie keine
+Annotationen erfordert, sehr leichtgewichtig ist und gut mit einfachen Java-POJOs
+zusammenarbeitet.
+
+%% ============================================================
+%%  KAPITEL 11: SPRINT REVIEW
+%% ============================================================
+\chapter{Sprint Review}
+\label{chap:review}
+
+\section{Sprint-1-Review \textendash{} Protokoll}
+
+\textbf{Datum:} Woche 2, Freitag, 14:00--14:45 Uhr\\
+\textbf{Anwesende:} Gesamtes Entwicklungsteam, Product Owner (Lehrveranstaltungsleitung)\\
+\textbf{Moderator:} Scrum Master Denise L.\ Doumbouya
+
+\subsection{Präsentiertes Inkrement}
+
+Das Team demonstrierte folgende funktionale Stories:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item Start des Programmes mit vordefinierten Testartikeln (6 Artikel aus allen Kategorien)
+  \item Anlegen eines neuen Artikels über das Konsolenmenü (US-01)
+  \item Anzeige der Artikelliste (US-02) mit Bestands- und Preisangabe
+  \item Bestand erhöhen (US-03) und verringern (US-04) mit Testfall für negativen Bestand
+  \item Mindestbestandswarnung (US-05) für \texttt{Monitor} mit \texttt{quantity = 1, minimum = 3}
+  \item Eingabe-Validierung bei ungültigem Menüpunkt (US-09)
+\end{itemize}
+
+\subsection{Kundenfeedback \textendash{} Product-Owner-Protokoll}
+
+\begin{infobox}[Product Owner Feedback \textendash{} Sprint 1 Review]
+  \textbf{Positiv:}
+  \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+    \item Kernfunktionalität vollständig und korrekt implementiert
+    \item Mindestbestandswarnung funktioniert zuverlässig
+    \item Eingabevalidierung verhindert Abstürze
+  \end{itemize}
+
+  \textbf{Verbesserungspotenzial:}
+  \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+    \item \textbf{Format:} CSV-Export nicht gewünscht \textrightarrow{} \textbf{JSON bevorzugt},
+          da das System an eine Web-API angebunden werden soll
+    \item \textbf{Sprache:} Deutsche Labels nicht akzeptabel für internationalen Rollout
+          \textrightarrow{} \textbf{vollständig englische Benutzeroberfläche}
+    \item \textbf{Architektur:} \texttt{Main.java} zu monolithisch (über 200 Zeilen);
+          \textbf{klarere Klassen\-trennung} gewünscht
+    \item \textbf{Zusatz:} Bestands-Summary mit Gesamtbestandswert wünschenswert
+  \end{itemize}
+\end{infobox}
+
+\subsection{Reaktion des Teams}
+
+Der Scrum Master dokumentierte das Feedback unmittelbar im Product Backlog. Im direkt
+anschließenden Sprint-Planning-Meeting für Sprint~2 wurden alle vier Feedback-Punkte als
+Sprint-2-Items aufgenommen. Die CSV-Exportklasse, die in Sprint~1 ansatzweise vorhanden war,
+wurde im Backlog als \textit{obsolete} markiert und nicht weiterentwickelt.
+
+\begin{warningbox}
+  \textbf{Kritische Reflexion:} Der CSV-Ansatz stellte sich als klassisches Beispiel für
+  \textit{Entwicklung am Kunden vorbei} heraus. Im Wasserfall wäre dies eine teure Änderung
+  gewesen; im Scrum-Kontext kostete die Korrektur lediglich zwei Stunden Priya's Sprint-Zeit.
+  Genau das ist der Mehrwert iterativer Entwicklung.
+\end{warningbox}
+
+\section{Sprint-2-Review \textendash{} Protokoll}
+
+\textbf{Datum:} Woche 4, Freitag, 14:00--14:30 Uhr\\
+\textbf{Anwesende:} Gesamtes Entwicklungsteam, Product Owner
+
+\subsection{Präsentiertes Inkrement}
+
+Das Team demonstrierte das vollständig überarbeitete System:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item JSON-Export: Datei \texttt{warehouse.json} enthält alle 6 Testprodukte korrekt serialisiert
+  \item Englisches Menü: alle Ausgaben konsistent in Englisch (\textit{Add item, Show items,
+        Increase stock, Decrease stock, Export to JSON, Exit})
+  \item \texttt{WarehouseService}-Klasse mit klarer Zuständigkeit (Logik-Schicht)
+  \item \texttt{ConsoleUI} als reine Präsentationsschicht
+  \item Bestands-Summary mit Gesamtbestandswert in Euro
+  \item Erfolgreiche JUnit-Tests für alle Kernoperationen
+\end{itemize}
+
+\begin{successbox}
+  \textbf{Product Owner Abnahme:} Alle Sprint-1-Feedback-Punkte wurden vollständig adressiert.
+  Das System entspricht nun den fachlichen Anforderungen. Spezielle Hervorhebung durch den
+  Product Owner: die saubere Klassenstruktur erleichtere eine spätere REST-API-Anbindung erheblich.
+\end{successbox}
+
+\section{Sprint Retrospektive}
+
+In der Sprint-Retrospektive nach Sprint~2 reflektierte das Team den Gesamtprozess:
+
+\begin{table}[H]
+  \centering
+  \caption{Ergebnisse der Sprint-Retrospektive}
+  \label{tab:retro}
+  \begin{tabularx}{\textwidth}{L{2cm} L{5cm} L{6cm}}
+    \toprule
+    \textbf{Kategorie} & \textbf{Thema} & \textbf{Maßnahme} \\
+    \midrule
+    \textcolor{darkGreen}{\textbf{Keep}}
+      & Daily Standup per Nachrichtengruppe war effizient
+      & Für zukünftige Projekte beibehalten \\
+    \textcolor{darkGreen}{\textbf{Keep}}
+      & Frühe Architekturentscheidungen dokumentieren
+      & Architecture Decision Records (ADR) einführen \\
+    \textcolor{orange!80!black}{\textbf{Improve}}
+      & Sprint-1-Architektur war noch zu monolithisch
+      & OOP-Prinzipien früher einplanen \\
+    \textcolor{orange!80!black}{\textbf{Improve}}
+      & Story-Point-Schätzung war ungenau (T-08 unterschätzt)
+      & Planning Poker für nächstes Projekt nutzen \\
+    \textcolor{darkRed}{\textbf{Stop}}
+      & Technische Schulden aus Zeitdruck akzeptieren
+      & Refactoring-Tasks explizit als Sprint-Items aufnehmen \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+%% ============================================================
+%%  KAPITEL 12: SYSTEMARCHITEKTUR
+%% ============================================================
+\chapter{Systemarchitektur}
+\label{chap:architektur}
+
+\section{Paketstruktur}
+
+Das finale System folgt einer Drei-Schichten-Architektur, die als Maven-Projekt strukturiert ist:
+
+\begin{verbatim}
+elager/
+├── pom.xml
+├── warehouse.json           (generiert)
+└── src/
+    ├── main/java/de/hs/elager/
+    │   ├── model/
+    │   │   └── Item.java
+    │   ├── repository/
+    │   │   └── Warehouse.java
+    │   ├── service/
+    │   │   └── WarehouseService.java
+    │   ├── ui/
+    │   │   └── ConsoleUI.java
+    │   ├── export/
+    │   │   └── JsonExporter.java
+    │   └── Main.java
+    └── test/java/de/hs/elager/
+        ├── WarehouseServiceTest.java
+        └── ItemTest.java
+\end{verbatim}
+
+\section{Architekturprinzipien}
+
+Die Architektur folgt drei explizit gewählten Prinzipien:
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Separation of Concerns:] Datenmodell, Geschäftslogik, Persistenz und Präsentation
+    sind in separaten Paketen und Klassen untergebracht.
+
+  \item[Single Responsibility Principle (SRP):] Jede Klasse hat genau eine Aufgabe. Zum
+    Beispiel ist \texttt{JsonExporter} ausschließlich für die Serialisierung zuständig;
+    \texttt{WarehouseService} implementiert ausschließlich die Geschäftsregeln.
+
+  \item[Dependency Inversion (vereinfacht):] \texttt{ConsoleUI} ruft ausschließlich
+    \texttt{WarehouseService}-Methoden auf und kennt weder \texttt{Warehouse} noch
+    \texttt{JsonExporter} direkt.
+\end{description}
+
+%% ============================================================
+%%  KAPITEL 13: UML-KLASSENDIAGRAMM
+%% ============================================================
+\chapter{UML-Klassendiagramm}
+\label{chap:uml}
+
+\section{Beschreibung des Klassendiagramms}
+
+Das folgende Klassendiagramm beschreibt die finale Systemarchitektur nach Sprint~2.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    class/.style={
+      rectangle, draw=hsPrimary, thick,
+      minimum width=4cm, text centered,
+      font=\small
+    },
+    attr/.style={font=\ttfamily\footnotesize, text width=4cm, align=left},
+    rel/.style={-{open triangle 60}, thick, color=hsPrimary},
+    comp/.style={-{diamond}, thick, color=hsPrimary},
+    uses/.style={dashed, -{Stealth}, thick, color=gray}
+  ]
+    % Item
+    \node[class, fill=hsAccent] (item) at (0,0) {\textbf{Item}};
+    \node[below=-0.02cm of item, rectangle, draw=hsPrimary, thick,
+          minimum width=4cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=3.8cm] (itemattr) {
+      \textendash{} id: int\\
+      \textendash{} name: String\\
+      \textendash{} quantity: int\\
+      \textendash{} minimum: int\\
+      \textendash{} price: double
+    };
+    \node[below=-0.02cm of itemattr, rectangle, draw=hsPrimary, thick,
+          minimum width=4cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=3.8cm] (itemmeth) {
+      + getters/setters()\\
+      + isLowStock(): bool\\
+      + toString(): String
+    };
+
+    % Warehouse
+    \node[class, fill=hsAccent] (wh) at (6,0) {\textbf{Warehouse}};
+    \node[below=-0.02cm of wh, rectangle, draw=hsPrimary, thick,
+          minimum width=4.2cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4cm] (whattr) {
+      \textendash{} items: List\textlangle{}Item\textrangle{}\\
+      \textendash{} nextId: int
+    };
+    \node[below=-0.02cm of whattr, rectangle, draw=hsPrimary, thick,
+          minimum width=4.2cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4cm] (whmeth) {
+      + addItem(Item)\\
+      + getItems(): List\\
+      + findById(int): Item
+    };
+
+    % WarehouseService
+    \node[class, fill=hsAccent] (srv) at (3,-5) {\textbf{WarehouseService}};
+    \node[below=-0.02cm of srv, rectangle, draw=hsPrimary, thick,
+          minimum width=4.8cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4.6cm] (srvattr) {
+      \textendash{} warehouse: Warehouse
+    };
+    \node[below=-0.02cm of srvattr, rectangle, draw=hsPrimary, thick,
+          minimum width=4.8cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4.6cm] (srvmeth) {
+      + createItem(...): Item\\
+      + increaseStock(id, qty)\\
+      + decreaseStock(id, qty)\\
+      + checkLowStock(): List\\
+      + getTotalValue(): double
+    };
+
+    % JsonExporter
+    \node[class, fill=hsAccent] (json) at (9,-5) {\textbf{JsonExporter}};
+    \node[below=-0.02cm of json, rectangle, draw=hsPrimary, thick,
+          minimum width=3.8cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=3.6cm] (jsonattr) {
+      \textendash{} gson: Gson
+    };
+    \node[below=-0.02cm of jsonattr, rectangle, draw=hsPrimary, thick,
+          minimum width=3.8cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=3.6cm] (jsonmeth) {
+      + export(Warehouse, path)\\
+      \textendash{} buildJson(...): String
+    };
+
+    % ConsoleUI
+    \node[class, fill=hsAccent] (ui) at (3,-9.5) {\textbf{ConsoleUI}};
+    \node[below=-0.02cm of ui, rectangle, draw=hsPrimary, thick,
+          minimum width=4.2cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4cm] (uiattr) {
+      \textendash{} service: WarehouseService\\
+      \textendash{} exporter: JsonExporter\\
+      \textendash{} scanner: Scanner
+    };
+    \node[below=-0.02cm of uiattr, rectangle, draw=hsPrimary, thick,
+          minimum width=4.2cm, font=\ttfamily\footnotesize, align=left,
+          fill=white, text width=4cm] (uimeth) {
+      + start()\\
+      \textendash{} showMenu()\\
+      \textendash{} handleInput(int)
+    };
+
+    % Beziehungen
+    \draw[comp] (wh.west) -- node[above, font=\scriptsize]{1..*} (item.east);
+    \draw[uses] (srv.north) -- (wh.south);
+    \draw[uses] (json.north) -- (wh.south);
+    \draw[uses] (ui.north) -- (srv.south);
+    \draw[uses] ([xshift=1cm]ui.north) -- (json.south);
+  \end{tikzpicture}
+  \caption{UML-Klassendiagramm des Elektroniklagerverwaltungssystems (finaler Zustand)}
+  \label{fig:uml}
+\end{figure}
+
+\section{Beschreibung der Klassen}
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[\texttt{Item} (Modellschicht):] Reine Datenhaltungsklasse (\textit{Plain Old Java Object}).
+    Enthält alle Artikelattribute sowie die Hilfsmethode \texttt{isLowStock()}, die prüft, ob
+    \texttt{quantity < minimum} gilt.
+
+  \item[\texttt{Warehouse} (Repository-Schicht):] Kapselt die Artikelliste und den
+    ID-Zähler. Verantwortlich für das Hinzufügen neuer Artikel und die Suche per ID.
+    Enthält keine Geschäftslogik.
+
+  \item[\texttt{WarehouseService} (Service-Schicht):] Implementiert alle Geschäftsregeln:
+    Negativbestand-Guard, Mindestbestandsprüfung, Gesamtwertberechnung. Enthält keine
+    Ausgabe-Logik.
+
+  \item[\texttt{JsonExporter} (Persistenz-Schicht):] Kapselt die Gson-Bibliothek und
+    serialisiert die Artikelliste in eine \json{}-Datei. Fehler beim Schreiben werden als
+    \texttt{RuntimeException} propagiert.
+
+  \item[\texttt{ConsoleUI} (Präsentationsschicht):] Liest Benutzereingaben, delegiert
+    an \texttt{WarehouseService} und \texttt{JsonExporter}, gibt Ergebnisse auf der Konsole aus.
+
+  \item[\texttt{Main}:] Einstiegspunkt. Instanziiert alle Objekte und startet
+    \texttt{ConsoleUI.start()}.
+\end{description}
+
+%% ============================================================
+%%  KAPITEL 14: IMPLEMENTIERUNG
+%% ============================================================
+\chapter{Implementierung}
+\label{chap:implementierung}
+
+\section{Klasse \texttt{Item}}
+
+\begin{lstlisting}[caption={Item.java -- Datenmodell eines Lagerartikels}, label={lst:item}]
+package de.hs.elager.model;
+
+public class Item {
+
+    private int    id;
+    private String name;
+    private int    quantity;
+    private int    minimum;
+    private double price;
+
+    public Item(int id, String name, int quantity, int minimum, double price) {
+        this.id       = id;
+        this.name     = name;
+        this.quantity = quantity;
+        this.minimum  = minimum;
+        this.price    = price;
+    }
+
+    public boolean isLowStock() {
+        return this.quantity < this.minimum;
+    }
+
+    // --- Getters & Setters ---
+    public int    getId()       { return id; }
+    public String getName()     { return name; }
+    public int    getQuantity() { return quantity; }
+    public int    getMinimum()  { return minimum; }
+    public double getPrice()    { return price; }
+
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    @Override
+    public String toString() {
+        return String.format("[%d] %-25s | Qty: %3d | Min: %2d | Price: %8.2f EUR",
+                id, name, quantity, minimum, price);
+    }
+}
+\end{lstlisting}
+
+\section{Klasse \texttt{WarehouseService}}
+
+\begin{lstlisting}[caption={WarehouseService.java -- Geschäftslogik}, label={lst:service}]
+package de.hs.elager.service;
+
+import de.hs.elager.model.Item;
+import de.hs.elager.repository.Warehouse;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class WarehouseService {
+
+    private final Warehouse warehouse;
+
+    public WarehouseService(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public Item createItem(String name, int quantity, int minimum, double price) {
+        Item item = new Item(warehouse.getNextId(), name, quantity, minimum, price);
+        warehouse.addItem(item);
+        return item;
+    }
+
+    public void increaseStock(int id, int amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive.");
+        Item item = warehouse.findById(id);
+        item.setQuantity(item.getQuantity() + amount);
+    }
+
+    public void decreaseStock(int id, int amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive.");
+        Item item = warehouse.findById(id);
+        int newQty = item.getQuantity() - amount;
+        if (newQty < 0) {
+            throw new IllegalStateException(
+                "Cannot decrease stock below zero. Current: "
+                + item.getQuantity() + ", Requested: " + amount);
+        }
+        item.setQuantity(newQty);
+    }
+
+    public List<Item> getLowStockItems() {
+        return warehouse.getItems().stream()
+                .filter(Item::isLowStock)
+                .collect(Collectors.toList());
+    }
+
+    public double getTotalValue() {
+        return warehouse.getItems().stream()
+                .mapToDouble(i -> i.getQuantity() * i.getPrice())
+                .sum();
+    }
+
+    public List<Item> getAllItems() {
+        return warehouse.getItems();
+    }
+}
+\end{lstlisting}
+
+\section{Klasse \texttt{JsonExporter}}
+
+\begin{lstlisting}[caption={JsonExporter.java -- JSON-Serialisierung}, label={lst:json}]
+package de.hs.elager.export;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import de.hs.elager.repository.Warehouse;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class JsonExporter {
+
+    private final Gson gson;
+
+    public JsonExporter() {
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
+    }
+
+    public void export(Warehouse warehouse, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            gson.toJson(warehouse.getItems(), writer);
+            System.out.println("Export successful: " + filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("JSON export failed: " + e.getMessage(), e);
+        }
+    }
+}
+\end{lstlisting}
+
+\section{Klasse \texttt{ConsoleUI}}
+
+\begin{lstlisting}[caption={ConsoleUI.java -- Präsentationsschicht (Auszug)}, label={lst:ui}]
+package de.hs.elager.ui;
+
+import de.hs.elager.export.JsonExporter;
+import de.hs.elager.model.Item;
+import de.hs.elager.service.WarehouseService;
+import java.util.List;
+import java.util.Scanner;
+
+public class ConsoleUI {
+
+    private final WarehouseService service;
+    private final JsonExporter     exporter;
+    private final Scanner          scanner;
+
+    public ConsoleUI(WarehouseService service, JsonExporter exporter) {
+        this.service  = service;
+        this.exporter = exporter;
+        this.scanner  = new Scanner(System.in);
+    }
+
+    public void start() {
+        boolean running = true;
+        while (running) {
+            showMenu();
+            int choice = readInt();
+            running = handleInput(choice);
+        }
+        System.out.println("Goodbye.");
+    }
+
+    private void showMenu() {
+        System.out.println("\n=== ELECTRONICS WAREHOUSE MANAGEMENT ===");
+        System.out.println("1. Add item");
+        System.out.println("2. Show all items");
+        System.out.println("3. Increase stock");
+        System.out.println("4. Decrease stock");
+        System.out.println("5. Export to JSON");
+        System.out.println("6. Show inventory summary");
+        System.out.println("0. Exit");
+        System.out.print("Choose: ");
+    }
+
+    private boolean handleInput(int choice) {
+        switch (choice) {
+            case 1  -> addItem();
+            case 2  -> showItems();
+            case 3  -> changeStock(true);
+            case 4  -> changeStock(false);
+            case 5  -> exportJson();
+            case 6  -> showSummary();
+            case 0  -> { return false; }
+            default -> System.out.println("Invalid option. Please try again.");
+        }
+        return true;
+    }
+
+    private void showItems() {
+        List<Item> items = service.getAllItems();
+        if (items.isEmpty()) { System.out.println("No items in warehouse."); return; }
+        System.out.println("\n--- ITEMS ---");
+        items.forEach(System.out::println);
+        List<Item> lowStock = service.getLowStockItems();
+        if (!lowStock.isEmpty()) {
+            System.out.println("\n[WARNING] Low stock items:");
+            lowStock.forEach(i -> System.out.println("  >> " + i.getName()
+                + " (qty=" + i.getQuantity() + ", min=" + i.getMinimum() + ")"));
+        }
+    }
+
+    private void changeStock(boolean increase) {
+        System.out.print("Item ID: ");
+        int id = readInt();
+        System.out.print("Amount: ");
+        int amount = readInt();
+        try {
+            if (increase) service.increaseStock(id, amount);
+            else          service.decreaseStock(id, amount);
+            System.out.println("Stock updated successfully.");
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            System.out.println("[ERROR] " + e.getMessage());
+        }
+    }
+
+    private int readInt() {
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid input. Enter a number: ");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
+    // ... weitere Methoden (addItem, exportJson, showSummary)
+}
+\end{lstlisting}
+
+\section{Beispiel-Output: JSON-Export}
+
+Das folgende Listing zeigt einen Ausschnitt der generierten Datei \texttt{warehouse.json}:
+
+\begin{lstlisting}[language={}, caption={warehouse.json -- Beispielausgabe (Auszug)}, label={lst:jsonout}]
+[
+  {
+    "id": 1,
+    "name": "Dell UltraSharp 27\" 4K Monitor",
+    "quantity": 5,
+    "minimum": 3,
+    "price": 599.0
+  },
+  {
+    "id": 2,
+    "name": "Samsung 980 Pro 1TB SSD",
+    "quantity": 12,
+    "minimum": 5,
+    "price": 89.99
+  },
+  {
+    "id": 3,
+    "name": "ASUS RT-AX88U WiFi 6 Router",
+    "quantity": 2,
+    "minimum": 4,
+    "price": 229.0
+  }
+]
+\end{lstlisting}
+
+%% ============================================================
+%%  KAPITEL 15: DEFINITION OF DONE
+%% ============================================================
+\chapter{Definition of Done}
+\label{chap:dod}
+
+Die \dod{} (\textsc{DoD}) ist ein explizites Qualitätskriterium, das festlegt, wann eine
+User Story als vollständig fertiggestellt gilt. Sie wurde im Sprint Planning von Sprint~1
+gemeinsam mit dem Product Owner vereinbart und in Sprint~2 um Testanforderungen erweitert.
+
+\begin{table}[H]
+  \centering
+  \caption{Definition of Done \textendash{} Gültig ab Sprint 2}
+  \label{tab:dod}
+  \begin{tabularx}{\textwidth}{C{0.5cm} L{8cm} C{1.5cm} C{1.5cm}}
+    \toprule
+    \textbf{\#} & \textbf{Kriterium} & \textbf{S1} & \textbf{S2} \\
+    \midrule
+    1 & Code ist kompilierbar und ausführbar & \cmark & \cmark \\
+    2 & Alle akzeptierten Akzeptanzkriterien der User Story sind erfüllt & \cmark & \cmark \\
+    3 & Mindestens ein positiver und ein negativer Testfall existiert & \xmark & \cmark \\
+    4 & Keine offenen \texttt{NullPointerException}-Risiken & \cmark & \cmark \\
+    5 & Kein Code verletzt das Single Responsibility Principle & \xmark & \cmark \\
+    6 & Alle Variablen- und Methodennamen sind englisch & \xmark & \cmark \\
+    7 & Code ist vom zweiten Teammitglied reviewed (4-Augen-Prinzip) & \cmark & \cmark \\
+    8 & Änderungen sind ins Git-Repository committet (aussagekräftige Message) & \cmark & \cmark \\
+    9 & Fehlerbehandlung für alle Benutzereingaben implementiert & \cmark & \cmark \\
+    10 & JSON-Export erzeugt valide Datei (Sprint 2 ab US-06) & n.a. & \cmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{infobox}[Bedeutung der DoD für das Praktikum]
+  Die DoD verhinderte in Sprint~2 eine vorzeitige Fertigstellung von US-07 (englische Labels):
+  Jonas hatte die Menüpunkte übersetzt, aber die Fehlermeldungen innerhalb der Geschäftslogik
+  waren noch auf Deutsch. Das 4-Augen-Prinzip im Code Review identifizierte dieses Problem,
+  bevor die Story als \textit{done} akzeptiert wurde.
+\end{infobox}
+
+%% ============================================================
+%%  KAPITEL 16: TESTKONZEPT
+%% ============================================================
+\chapter{Testkonzept}
+\label{chap:tests}
+
+\section{Teststrategie}
+
+Das Testkonzept unterscheidet zwischen manuellen Funktionstests (Sprint~1) und automatisierten
+JUnit-Tests (Sprint~2). Diese Progression spiegelt die iterative Qualitätssteigerung wider.
+
+\section{Manuelle Testfälle (Sprint 1)}
+
+\begin{longtable}{C{0.7cm} L{4cm} L{3.5cm} L{3.5cm} C{1.5cm}}
+  \caption{Manuelle Testfälle aus Sprint 1}
+  \label{tab:tests-manual} \\
+  \toprule
+  \textbf{TC} & \textbf{Beschreibung} & \textbf{Eingabe} & \textbf{Erwartet} & \textbf{Ergebnis} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{5}{c}{\tablename~\thetable{} (Fortsetzung)} \\
+  \toprule
+  \textbf{TC} & \textbf{Beschreibung} & \textbf{Eingabe} & \textbf{Erwartet} & \textbf{Ergebnis} \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  MT-01 & Artikel anlegen & Name: ``Keyboard'', qty: 10, min: 3, price: 49.99 & Artikel in Liste sichtbar mit ID~1 & \cmark \\
+  MT-02 & Bestand erhöhen & ID~1, Amount: 5 & quantity = 15 & \cmark \\
+  MT-03 & Bestand verringern (gültig) & ID~1, Amount: 3 & quantity = 12 & \cmark \\
+  MT-04 & Bestand verringern (negativ) & ID~1, Amount: 99 & Fehlermeldung, qty unverändert & \cmark \\
+  MT-05 & Mindestbestandswarnung & qty = 2, min = 5 & Warnung ausgegeben & \cmark \\
+  MT-06 & Ungültige Menüeingabe & Text statt Zahl & Retry-Aufforderung & \cmark \\
+  MT-07 & Ungültige ID beim Bestand ändern & ID~999 & Fehlermeldung & \cmark \\
+\end{longtable}
+
+\section{JUnit-Testfälle (Sprint 2)}
+
+\begin{lstlisting}[caption={WarehouseServiceTest.java -- JUnit-5-Tests}, label={lst:tests}]
+package de.hs.elager.service;
+
+import de.hs.elager.model.Item;
+import de.hs.elager.repository.Warehouse;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class WarehouseServiceTest {
+
+    private WarehouseService service;
+
+    @BeforeEach
+    void setUp() {
+        Warehouse wh = new Warehouse();
+        service = new WarehouseService(wh);
+        service.createItem("Test Monitor", 10, 3, 299.99);
+    }
+
+    @Test
+    @DisplayName("createItem increases warehouse size by 1")
+    void testCreateItem() {
+        int before = service.getAllItems().size();
+        service.createItem("Test SSD", 5, 2, 79.99);
+        assertEquals(before + 1, service.getAllItems().size());
+    }
+
+    @Test
+    @DisplayName("increaseStock adds correct amount")
+    void testIncreaseStock() {
+        service.increaseStock(1, 5);
+        assertEquals(15, service.getAllItems().get(0).getQuantity());
+    }
+
+    @Test
+    @DisplayName("decreaseStock subtracts correct amount")
+    void testDecreaseStock() {
+        service.decreaseStock(1, 4);
+        assertEquals(6, service.getAllItems().get(0).getQuantity());
+    }
+
+    @Test
+    @DisplayName("decreaseStock throws on negative result")
+    void testDecreaseStockNegative() {
+        assertThrows(IllegalStateException.class,
+            () -> service.decreaseStock(1, 99));
+    }
+
+    @Test
+    @DisplayName("getLowStockItems returns item when below minimum")
+    void testLowStock() {
+        service.decreaseStock(1, 8); // qty=2, min=3 -> low stock
+        assertFalse(service.getLowStockItems().isEmpty());
+        assertEquals("Test Monitor", service.getLowStockItems().get(0).getName());
+    }
+
+    @Test
+    @DisplayName("getTotalValue returns correct sum")
+    void testTotalValue() {
+        double expected = 10 * 299.99;
+        assertEquals(expected, service.getTotalValue(), 0.001);
+    }
+
+    @Test
+    @DisplayName("increaseStock throws on non-positive amount")
+    void testIncreaseStockInvalidAmount() {
+        assertThrows(IllegalArgumentException.class,
+            () -> service.increaseStock(1, -3));
+    }
+}
+\end{lstlisting}
+
+\section{Testergebnisse Sprint 2}
+
+\begin{table}[H]
+  \centering
+  \caption{JUnit-Testergebnisse nach Sprint~2}
+  \label{tab:testergebnisse}
+  \begin{tabularx}{0.8\textwidth}{L{6cm} C{2cm} C{2cm}}
+    \toprule
+    \textbf{Testklasse} & \textbf{Tests} & \textbf{Ergebnis} \\
+    \midrule
+    \texttt{WarehouseServiceTest}  & 7 & \textcolor{darkGreen}{\textbf{7/7 PASS}} \\
+    \texttt{ItemTest}              & 3 & \textcolor{darkGreen}{\textbf{3/3 PASS}} \\
+    \midrule
+    \textbf{Gesamt}                & \textbf{10} & \textcolor{darkGreen}{\textbf{10/10 PASS}} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+%% ============================================================
+%%  KAPITEL 17: VERGLEICH WASSERFALL VS. SCRUM
+%% ============================================================
+\chapter{Vergleich: Wasserfallmodell vs.\ Scrum}
+\label{chap:vergleich}
+
+\section{Struktureller Vergleich}
+
+\begin{table}[H]
+  \centering
+  \caption{Direktvergleich: Wasserfallmodell vs.\ Scrum}
+  \label{tab:vergleich}
+  \begin{tabularx}{\textwidth}{L{3.5cm} L{5cm} L{5cm}}
+    \toprule
+    \textbf{Kriterium} & \textbf{Wasserfallmodell} & \textbf{Scrum} \\
+    \midrule
+    Planungsphilosophie & Vollständige Planung vor Start & Just-Enough-Planning, iterativ \\
+    Flexibilität & Gering; Änderungen kosten viel & Hoch; Änderungen nach jedem Sprint \\
+    Kundeninteraktion & Anfang und Ende & Kontinuierlich (Sprint Review) \\
+    Risiko-Timing & Risiken zeigen sich spät & Risiken früh sichtbar \\
+    Lieferzeitpunkt & Einmaliger Release am Ende & Inkrement nach jedem Sprint \\
+    Dokumentation & Umfangreich, vorab & Minimal, begleitend \\
+    Teamstruktur & Hierarchisch / funktional & Selbstorganisiert, cross-funktional \\
+    Geeignet für & Stabile Anforderungen, hohe Compliance & Veränderliche Anforderungen \\
+    Messbarkeit & Meilensteine & Velocity, Burndown-Chart \\
+    Fehlerkosten & Steigen exponentiell mit Phasenverzug & Begrenzt auf Sprint-Umfang \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Projektspezifischer Vergleich}
+
+Im Rahmen dieses Praktikums manifestierten sich die theoretischen Unterschiede sehr konkret:
+
+\begin{table}[H]
+  \centering
+  \caption{Vergleich am konkreten Projektbeispiel}
+  \label{tab:projektvergleich}
+  \begin{tabularx}{\textwidth}{L{3.5cm} L{5cm} L{5cm}}
+    \toprule
+    \textbf{Situation} & \textbf{Wasserfall} & \textbf{Scrum} \\
+    \midrule
+    Exportformat-Entscheidung &
+      CSV fest im Pflichtenheft verankert; Änderung erfordert Neuplanung &
+      JSON nach Sprint~1-Review ohne Prozessbruch in Sprint~2 \\
+    Englische Labels &
+      Deutsch im Pflichtenheft; keine Feedback-Schleife &
+      Nach Review sofort priorisiert und umgesetzt \\
+    Architektur &
+      Monolithische \texttt{Main}-Klasse im Design festgelegt &
+      Refactoring als Sprint-Item nach Review \\
+    Qualitätssicherung &
+      Nur manuelle Tests am Projektende &
+      JUnit-Tests ab Sprint~2 als DoD-Kriterium \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Eignung nach Projekttyp}
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Wasserfall eignet sich für:]
+    Projekte mit streng reguliertem Umfeld (Medizintechnik, Luft- und Raumfahrt,
+    Embedded-Systeme mit Zertifizierungspflicht), sehr stabilen und vollständig
+    bekannten Anforderungen, festem Budget und fixiertem Lieferumfang sowie
+    Projekten, bei denen Änderungen physisch teuer sind (Hardwareentwicklung).
+
+  \item[Scrum eignet sich für:]
+    Projekte mit sich entwickelnden oder noch nicht vollständig bekannten Anforderungen,
+    enger Kundeninteraktion während der Entwicklung, Digitalisierungs- und
+    Produktentwicklungsvorhaben, Start-up-Kontexten und Inhouse-Entwicklung sowie
+    alle Situationen, in denen frühe Nutzerfeedbacks den Produktwert erheblich steigern können.
+\end{description}
+
+%% ============================================================
+%%  KAPITEL 18: REFLEXION
+%% ============================================================
+\chapter{Reflexion}
+\label{chap:reflexion}
+
+\section{Einleitendes}
+
+Die folgende Reflexion ist der Kern dieser Dokumentation. Sie geht über eine
+Zusammenfassung des Geleisteten hinaus und analysiert ehrlich, an welchen Stellen die
+Theorie auf die Realität des Praktikums traf \textendash{} und an welchen sie scheiterte.
+
+\section{In welchem Modell fühlte sich das Team sicherer?}
+
+Eine bemerkenswert ehrliche Antwort auf diese Frage: Im Wasserfallmodell fühlte sich das
+Team anfänglich \textit{sicherer} \textendash{} aber nur im Sinne einer trügerischen Sicherheit.
+
+Die klaren Phasenübergänge, das abgeschlossene Pflichtenheft und die vorgegebene Sequenz
+erzeugten das Gefühl, \textit{alles unter Kontrolle} zu haben. Jeder wusste genau, was zu tun
+war, wann es getan sein musste und in welcher Reihenfolge. Diese Klarheit ist psychologisch
+angenehm, insbesondere für ein Team ohne gemeinsame Vorerfahrung.
+
+Im Scrum-Kontext war diese Planungssicherheit zunächst abwesend. Das Sprint Planning
+mit relativen Story-Point-Schätzungen wirkte anfangs willkürlich. Die Frage
+\textit{Wann sind wir fertig?} ließ sich nicht mehr mit einem Datum beantworten, sondern
+nur noch mit \textit{Am Ende von Sprint 2 \textendash{} wenn alles Geplante die DoD erfüllt}.
+
+Mit dem Ende des zweiten Sprints hatte sich die Wahrnehmung grundlegend verschoben:
+Die Sicherheit des Wasserfall-Ansatzes entpuppte sich als Illusion. Der Wasserfall-Prototyp
+lieferte zwar planmäßig, aber am falschen Ziel vorbei. Das Scrum-Inkrement nach Sprint~2
+hingegen war trotz anfänglicher Orientierungslosigkeit \textbf{exakt das, was der Product
+Owner gebraucht hatte}.
+
+\section{Wann wurde deutlich, dass am Kunden vorbei entwickelt wurde?}
+
+Der Moment war präzise datierbar: der Sprint-1-Review, Freitag der zweiten
+Praktikumswoche. Als der Product Owner das laufende System sah, fiel der erste Kommentar
+nicht auf die Funktionalität \textendash{} die war korrekt \textendash{} sondern auf das Format: \textit{Warum
+CSV? Wir brauchen JSON.}
+
+Dieser Satz war lehrreich auf mehreren Ebenen. Erstens bestätigte er, dass
+Anforderungen, die auf dem Papier eindeutig erscheinen (\textit{``Exportfunktion''
+im Pflichtenheft), in der Vorstellung des Auftraggebers sehr konkret sind \textendash{} und
+diese Konkretheit kommt oft erst beim Anblick eines lauffähigen Systems zutage.
+Zweitens offenbarte er ein strukturelles Problem des Wasserfall-Modells: Das Pflichtenheft
+hatte keine Zeile über das Exportformat gesagt, weil in der Anforderungsphase niemand
+danach gefragt hatte. Im Wasserfall hätte das eine Vertragsänderung bedeutet.
+
+Die zweite Erkenntnis war subtiler: Die deutschen Labels. Keines der Teammitglieder
+hatte beim Schreiben des deutschen Menüs daran gedacht, den Product Owner zu fragen, ob
+die Sprache relevant sei. Im Pflichtenheft stand \textit{Konsolenmenü} \textendash{} nicht
+\textit{englisches Konsolenmenü}. Das ist der Unterschied zwischen einem spezifizierten
+System und einem \textit{nützlichen} System.
+
+Im Wasserfall-Prototyp fehlte schlicht die Gelegenheit, diese Lücken zu schließen.
+Im Scrum-Prozess wurde diese Erkenntnis zu einem produktiven Sprint-2-Item.
+
+\section{Für welche Projekte eignet sich Wasserfall?}
+
+Die reflexive Antwort nach diesem Praktikum lautet: Wasserfall eignet sich für Projekte,
+bei denen das Risiko einer Anforderungsänderung bewusst und akzeptiert ausgeschlossen wird.
+
+Dies ist keine Kritik an dem Modell, sondern eine Klarstellung seines Geltungsbereichs.
+In sicherheitskritischen Systemen \textendash{} medizinische Software, avionische Steuerungen,
+Industriesteuerungen nach IEC~61508 \textendash{} sind Änderungsprozesse bewusst formalisiert
+und teuer, weil jede Änderung eine vollständige Requalifizierung nach sich ziehen kann.
+Dort ist der Wasserfall nicht nur akzeptabel, sondern \textit{geboten}.
+
+Für Projekte mit fest vereinbartem Lieferumfang und klar definierten
+Qualitätsmerkmalen \textendash{} etwa Wartungsverträge, Migrationsprojekte mit stabiler
+Datenbasis oder Batch-Verarbeitungssysteme für interne Prozesse \textendash{} ist das
+Wasserfallmodell effizienter als Scrum, weil der Overhead der Scrum-Zeremonien nicht
+durch erhöhte Flexibilität aufgewogen wird.
+
+\section{Für welche Projekte eignet sich Scrum?}
+
+Scrum entfaltet seinen vollen Wert dort, wo Anforderungen sich im Laufe der Entwicklung
+konkretisieren oder verändern. Dieses Praktikum ist ein Lehrbuchbeispiel: Die Anforderung
+\textit{Exportfunktion} klingt eindeutig, ist es aber nicht \textendash{} bis man den Kontext kennt.
+Eben diesen Kontext liefert das Sprint Review.
+
+Darüber hinaus eignet sich Scrum besonders dann, wenn das Entwicklungsteam nah am
+zukünftigen Nutzer arbeitet und kontinuierliches Feedback integrieren kann. In der
+kommerziellen Softwareentwicklung \textendash{} ERP-Systeme, CRM-Lösungen,
+E-Commerce-Plattformen \textendash{} ist Scrum heute de facto der Standard, weil
+Fachbereiche selten in der Lage sind, Anforderungen zu Beginn vollständig zu spezifizieren.
+
+\section{Welche Rolle spielte das Sprint Review?}
+
+Das Sprint Review war das wichtigste Ereignis des gesamten Praktikums. Nicht das
+Sprint Planning, nicht die Daily Scrums, sondern das Review \textendash{} weil es der einzige
+Moment war, in dem der Product Owner das System \textit{tatsächlich genutzt} hat.
+
+Eine schriftliche Anforderung wird interpretiert. Ein laufendes System wird erlebt.
+Dieser Unterschied ist fundamental. Im Sprint-1-Review erlebte der Product Owner, dass
+CSV als Exportformat für seinen geplanten Verwendungszweck unbrauchbar war. Diese
+Erkenntnis hätte keine noch so gründliche Anforderungsanalyse zu Projektbeginn zuverlässig
+hervorgebracht, weil die Frage \textit{In welchem Format soll der Export erfolgen?}
+in einem abstrakten Pflichtenheft-Gespräch anders beantwortet wird als beim Anblick
+eines konkreten CSV-Exports.
+
+Das Review erzeugte außerdem Motivation im Team. Positives Feedback des Product Owners
+auf die funktionierende Kernfunktionalität war weitaus wirkungsvoller als jedes
+formale Status-Meeting.
+
+\section{Warum war Scrum bei diesem Projekt sinnvoll?}
+
+Scrum war bei diesem Projekt sinnvoll, weil das System für einen realen (simulierten)
+Auftraggeber entwickelt wurde, dessen vollständige Vorstellungen zu Beginn nicht bekannt
+waren. Das ist keine Ausnahme \textendash{} es ist der Regelfall in der Softwareentwicklung.
+
+Konkret profitierte das Projekt an drei Stellen von Scrum:
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \textbf{Feedback-Schleife:} Das Sprint Review erzeugte konkrete, umsetzbare
+    Verbesserungspunkte. Ohne Review wäre Sprint~2 ohne Korrekturen geblieben.
+
+  \item \textbf{Priorisierung:} Das Backlog-Refinement nach Sprint~1 erlaubte es,
+    JSON-Export \textendash{} nun als Must-have klassifiziert \textendash{} sofort in Sprint~2
+    zu priorisieren, ohne den Projektzeitplan zu gefährden.
+
+  \item \textbf{Kontinuierliche Qualitätssteigerung:} Die DoD-Erweiterung zwischen
+    Sprint~1 und Sprint~2 (Einführung der JUnit-Tests) führte zu messbarer
+    Qualitätsverbesserung, die im Wasserfallmodell nicht möglich gewesen wäre, weil
+    der Testzeitpunkt am Ende fixiert war.
+\end{enumerate}
+
+\section{Unterschiede zwischen Theorie und realem Praktikum}
+
+Die akademische Scrum-Theorie beschreibt ein idealisiertes Framework. Die Realität des
+Praktikums war an mehreren Stellen anders:
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Daily Scrum vs.\ Realität:] Tägliche 15-minütige Standups sind in einem
+    dreistündigen Wochenpraktikum nicht sinnvoll umsetzbar. Stattdessen nutzte das Team
+    eine Nachrichtengruppe für tägliche Statusmeldungen. Die Substanz des Daily Scrum
+    \textendash{} Hindernisse sichtbar machen \textendash{} blieb erhalten; die Form wurde pragmatisch
+    angepasst.
+
+  \item[Velocity vs.\ Realität:] Story-Point-Schätzungen waren im ersten Sprint
+    erheblich ungenauer als erwartet. Aufgabe T-08 (JSON-Export) wurde mit 5 Story Points
+    geschätzt, benötigte aber in der Umsetzung deutlich mehr Zeit, da die Gson-Bibliothek
+    zunächst korrekt in Maven eingebunden werden musste und die Pretty-Printing-Konfiguration
+    mehr Einarbeitungszeit erforderte als geplant.
+
+  \item[Product Owner vs.\ Realität:] Ein wirklicher Product Owner ist täglich verfügbar.
+    Im Praktikum stand die Lehrveranstaltungsleitung nur im Sprint Review zur Verfügung.
+    Dies führte dazu, dass Zwischenfragen nicht sofort beantwortet werden konnten, was
+    in Sprint~1 zu einer kleinen Fehlentscheidung (Menü-Strukturierung) führte, die erst
+    im Review korrigiert wurde.
+
+  \item[Selbstorganisation vs.\ Realität:] Selbstorganisierte Teams benötigen ein
+    Mindestmaß an gemeinsamer Erfahrung. Im ersten Sprint übernahm der Scrum Master
+    \textendash{} entgegen der Scrum-Theorie \textendash{} implizit auch Koordinierungsaufgaben,
+    die eigentlich dem Team gehören. Ab Sprint~2 hatte das Team genug gemeinsamen Rhythmus
+    entwickelt, um echte Selbstorganisation zu praktizieren.
+\end{description}
+
+Diese Abweichungen schmälern den Erkenntniswert nicht \textendash{} im Gegenteil: Sie belegen,
+dass Scrum kein starres Regelwerk ist, sondern ein Rahmenwerk, das bewusste Anpassung
+an den Kontext erfordert.
+
+%% ============================================================
+%%  KAPITEL 19: AUTHENTISCHER PROJEKTABLAUF
+%% ============================================================
+\chapter{Authentischer Projektablauf}
+\label{chap:ablauf}
+
+\section{Chronologische Projekthistorie}
+
+\begin{table}[H]
+  \centering
+  \caption{Projektzeitstrahl mit Meilensteinen}
+  \label{tab:zeitstrahl}
+  \begin{tabularx}{\textwidth}{C{1.5cm} L{3cm} L{8cm}}
+    \toprule
+    \textbf{Woche} & \textbf{Phase} & \textbf{Ereignisse \& Erkenntnisse} \\
+    \midrule
+    W1 & Wasserfall & Anforderungsanalyse, Pflichtenheft, Design (CSV, Deutsch) \\
+    W1 & Wasserfall & Implementierung Grundgerüst (\texttt{Item}, \texttt{Warehouse}, \texttt{Main}) \\
+    W2 & Wasserfall & Fertigstellung, manuelle Tests, Präsentation beim Product Owner \\
+    W2 & Übergang & \textbf{Pivot:} Wechsel zu Scrum. Backlog erstellen, Rollen verteilen \\
+    W2 & Sprint 1 & Planning: 16 SP, Sprint-Ziel vereinbart \\
+    W2--W3 & Sprint 1 & Entwicklung: Kernfunktionen, Konsolenmenü, Fehlerbehandlung \\
+    W3 & Sprint 1 & Sprint Review: JSON-Feedback, Englisch, Architektur \\
+    W3 & Sprint 1 & Retrospektive: Erkenntnisse zu Story-Point-Schätzung und SRP \\
+    W3 & Sprint 2 & Planning: 18 SP, JSON/English/Refactoring im Sprint-Ziel \\
+    W3--W4 & Sprint 2 & Entwicklung: JsonExporter, Refactoring, JUnit-Tests \\
+    W4 & Sprint 2 & Sprint Review: Abnahme durch Product Owner \\
+    W4 & Sprint 2 & Retrospektive + Dokumentation begonnen \\
+    W5 & Doku & Fertigstellung Dokumentation, Abgabe \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Konkrete Probleme während der Entwicklung}
+
+\paragraph{Problem 1: Gson und Maven-Dependency (Sprint 2, Tag 1):}
+Die Einbindung der Gson-Bibliothek via Maven führte zunächst zu einem
+\texttt{ClassNotFoundException} beim ersten Testlauf. Ursache war eine
+fehlende \texttt{scope}-Deklaration in der \texttt{pom.xml} und ein veraltetes
+lokales Maven-Repository. Lösung: \texttt{mvn dependency:purge-local-repository}
+sowie explizite \texttt{compile}-Scope-Angabe.
+
+\paragraph{Problem 2: NullPointerException bei unbekannter ID (Sprint 1, Tag 3):}
+Die \texttt{findById}-Methode in \texttt{Warehouse} gab \texttt{null} zurück,
+wenn die ID nicht gefunden wurde. In \texttt{ConsoleUI} wurde das Ergebnis
+direkt dereferenziert, was zu einem Absturz führte. Lösung: Umstellung auf
+\texttt{Optional<Item>} und explizite Fehlerbehandlung in \texttt{ConsoleUI}.
+
+\paragraph{Problem 3: Doppelte Verantwortlichkeit in \texttt{Main} (Sprint 1, Sprint Review):}
+Die \texttt{Main}-Klasse enthielt anfangs sowohl die Menüsteuerung als auch
+Teile der Geschäftslogik. Dies war der direkteste Verstoß gegen das
+Single Responsibility Principle und wurde erst im Sprint Review explizit angemahnt.
+Das Refactoring in Sprint~2 (Extraktion von \texttt{WarehouseService} und
+\texttt{ConsoleUI}) behob dieses Problem vollständig.
+
+\paragraph{Problem 4: Zeichencodierung in JSON (Sprint 2, Tag 3):}
+Sonderzeichen in Artikelnamen (z.\,B. Anführungszeichen im Modellnamen
+\textit{Dell UltraSharp 27'' Monitor}) führten ohne Escaping zu invaliden
+JSON-Ausgaben. Gson behandelt das intern korrekt; das Problem trat allerdings
+auf, als die Gruppe versuchte, selbst einen JSON-String zu konkatenieren.
+Die vollständige Umstellung auf Gson's Serialisierungsmethoden behob das Problem.
+
+%% ============================================================
+%%  KAPITEL 20: FAZIT
+%% ============================================================
+\chapter{Fazit}
+\label{chap:fazit}
+
+\section{Zusammenfassung der Ergebnisse}
+
+Das Praktikum \textit{Vom Wasserfall zum Sprint} hat sein didaktisches Ziel in vollem
+Umfang erreicht. Das entwickelte Elektroniklagerverwaltungssystem ist funktional vollständig,
+technisch sauber strukturiert und entspricht nach zwei Scrum-Sprints exakt den
+Anforderungen des Product Owners. Die Systemarchitektur folgt dem Prinzip der Separation
+of Concerns, alle 10 JUnit-Tests laufen fehlerfrei durch, und der JSON-Export produziert
+valide, internationalisierbare Ausgaben.
+
+\section{Methodische Erkenntnisse}
+
+Die zentrale methodische Erkenntnis lässt sich in einem Satz zusammenfassen:
+\textbf{Beide Modelle sind richtig \textendash{} für unterschiedliche Kontexte.}
+
+Das Wasserfallmodell lieferte ein vollständiges System pünktlich nach Plan. Die
+Planungsdisziplin war wertvoll. Die Erfahrung zeigte aber auch: \textit{Pünktlich am
+falschen Ziel ankommen} ist kein Projekterfolg.
+
+Scrum lieferte anfänglich mehr Orientierungslosigkeit und mehr Diskussion. Die
+Sprint Reviews erzeugten Mehrarbeit. Aber diese Mehrarbeit war produktiv: Sie führte
+zu einem System, das der Auftraggeber tatsächlich nutzen kann und das für spätere
+Erweiterungen offen bleibt.
+
+\section{Ausblick}
+
+Das entwickelte System bildet eine solide Grundlage für weitere Erweiterungen:
+eine REST-API-Anbindung (die saubere \texttt{WarehouseService}-Schicht ermöglicht dies
+ohne Architekturbruch), eine datenbankgestützte Persistenz (Austausch von
+\texttt{Warehouse} gegen eine JPA-Repository-Implementierung) oder eine Web-Benutzeroberfläche.
+Die gewählte Architektur macht genau diese Erweiterbarkeit möglich \textendash{} ein Ergebnis,
+das der Scrum-Prozess durch konsequentes Refactoring herbeigeführt hat.
+
+\begin{infobox}[Abschließende Bewertung des Scrum-Einsatzes]
+  Für ein System wie das vorliegende Elektroniklagerverwaltungssystem \textendash{} mit einem
+  echten (simulierten) Auftraggeber, sich konkretisierenden Anforderungen und dem Ziel
+  der späteren Erweiterbarkeit \textendash{} war Scrum das eindeutig überlegene Entwicklungsmodell.
+  Nicht weil Wasserfall schlecht ist, sondern weil die Projektcharakteristika explizit
+  auf die Stärken agiler Entwicklung zugeschnitten waren.
+\end{infobox}
+
+%% ============================================================
+%%  LITERATURVERZEICHNIS
+%% ============================================================
+\printbibliography[heading=bibintoc, title={Literaturverzeichnis}]
+
+\end{document}
