@@ -1,4 +1,4 @@
-````markdown
+
 # Elektroniklagerverwaltung
 
 Ein konsolenbasiertes Lagerverwaltungssystem in Java, entwickelt im Rahmen des Praktikums  
