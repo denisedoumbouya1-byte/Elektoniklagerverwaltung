@@ -26,14 +26,16 @@ public class JsonExporter {
                 "  {\n" +
                         "    \"id\": %d,\n" +
                         "    \"name\": \"%s\",\n" +
-                        "    \"quantity\": %d,\n" +
-                        "    \"minimum\": %d,\n" +
+                        "    \"quantity\": %.2f,\n" +
+                        "    \"unit\": \"%s\",\n" +
+                        "    \"minimum\": %.1f,\n" +
                         "    \"price\": %.2f\n" +
                         "  }",
                 article.getId(),
                 escapeJson(article.getName()),
                 article.getQuantity(),
-                article.getMinimum(),
+                article.getUnit(),
+                (double) article.getMinimum(),
                 article.getPrice());
     }
 

@@ -53,13 +53,13 @@ public class Main {
 
     private static void printMenu() {
         printSectionTitle("Hauptmenü");
-        System.out.println("  1) Add article");
-        System.out.println("  2) Show articles");
-        System.out.println("  3) Delete article");
-        System.out.println("  4) Increase quantity");
-        System.out.println("  5) Decrease quantity");
-        System.out.println("  6) Export JSON");
-        System.out.println("  0) Exit");
+        System.out.println("  1) Artikel hinzufügen");
+        System.out.println("  2) Artikel anzeigen");
+        System.out.println("  3) Artikel löschen");
+        System.out.println("  4) Bestand erhöhen");
+        System.out.println("  5) Bestand verringern");
+        System.out.println("  6) JSON exportieren");
+        System.out.println("  0) Beenden");
         printSeparator();
     }
 
@@ -72,12 +72,13 @@ public class Main {
         }
 
         String name = InputHelper.readNonEmptyString(scanner, "Name: ");
-        int quantity = InputHelper.readNonNegativeInt(scanner, "Quantity: ");
+        double quantity = InputHelper.readNonNegativeDouble(scanner, "Quantity: ");
+        Unit unit = chooseUnit(scanner);
         int minimum = InputHelper.readNonNegativeInt(scanner, "Minimum: ");
         double price = InputHelper.readNonNegativeDouble(scanner, "Price: ");
 
         try {
-            Article article = new Article(id, name, quantity, minimum, price);
+            Article article = new Article(id, name, quantity, unit, minimum, price);
             boolean added = warehouse.addArticle(article);
             if (added) {
                 printSuccess("Artikel erfolgreich hinzugefügt.");
@@ -88,6 +89,16 @@ public class Main {
         } catch (IllegalArgumentException e) {
             printError("Fehler beim Anlegen des Artikels: " + e.getMessage());
         }
+    }
+
+    private static Unit chooseUnit(Scanner scanner) {
+        printSectionTitle("Einheit wählen");
+        Unit[] units = Unit.values();
+        for (int index = 0; index < units.length; index++) {
+            System.out.printf("  %d) %s%n", index + 1, units[index].getSymbol());
+        }
+        printSeparator();
+        return InputHelper.readEnumSelection(scanner, "Einheit auswählen [1-" + units.length + "]: ", units);
     }
 
     private static void showArticles() {
@@ -157,14 +168,15 @@ public class Main {
 
     private static void printArticleTableHeader() {
         printSeparator();
-        System.out.printf("%-4s | %-22s | %-8s | %-8s | %-10s | %s%n", "ID", "Name", "Quantity", "Minimum", "Price", "Status");
+        System.out.printf("%-4s | %-22s | %-10s | %-4s | %-8s | %-10s | %s%n",
+                "ID", "Name", "Quantity", "Unit", "Minimum", "Price", "Status");
         printSeparator();
     }
 
     private static void printArticleRow(Article article) {
         String status = article.isBelowMinimum() ? "! WARNING !" : "OK";
-        System.out.printf("%-4d | %-22s | %8d | %8d | %10.2f | %s%n",
-                article.getId(), article.getName(), article.getQuantity(), article.getMinimum(), article.getPrice(), status);
+        System.out.printf("%-4d | %-22s | %10.2f | %-4s | %8d | %10.2f | %s%n",
+                article.getId(), article.getName(), article.getQuantity(), article.getUnit(), article.getMinimum(), article.getPrice(), status);
     }
 
     private static void printSeparator() {

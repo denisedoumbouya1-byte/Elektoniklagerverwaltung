@@ -1,26 +1,33 @@
 /**
  * Repräsentiert einen Artikel im Elektroniklager.
- * Diese Klasse kapselt Validierungen für Artikelattribute und Bestandsänderungen.
+ * Diese Klasse kapselt Validierungen für Artikelattribute, Mengeneinheiten und Bestandsänderungen.
  */
 public class Article {
     private final int id;
     private String name;
-    private int quantity;
+    private double quantity;
     private int minimum;
+    private Unit unit;
     private double price;
 
-    public Article(int id, String name, int quantity, int minimum, double price) {
+    public Article(int id, String name, double quantity, Unit unit, int minimum, double price) {
         validateId(id);
         validateName(name);
         validateQuantity(quantity);
+        validateUnit(unit);
         validateMinimum(minimum);
         validatePrice(price);
 
         this.id = id;
         this.name = name.trim();
         this.quantity = quantity;
+        this.unit = unit;
         this.minimum = minimum;
         this.price = price;
+    }
+
+    public Article(int id, String name, double quantity, int minimum, double price) {
+        this(id, name, quantity, Unit.PIECE, minimum, price);
     }
 
     private static void validateId(int id) {
@@ -35,9 +42,15 @@ public class Article {
         }
     }
 
-    private static void validateQuantity(int quantity) {
+    private static void validateQuantity(double quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity darf nicht negativ sein.");
+        }
+    }
+
+    private static void validateUnit(Unit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit darf nicht null sein.");
         }
     }
 
@@ -61,8 +74,12 @@ public class Article {
         return name;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
+    }
+
+    public Unit getUnit() {
+        return unit;
     }
 
     public int getMinimum() {
@@ -78,6 +95,16 @@ public class Article {
         this.name = name.trim();
     }
 
+    public void setQuantity(double quantity) {
+        validateQuantity(quantity);
+        this.quantity = quantity;
+    }
+
+    public void setUnit(Unit unit) {
+        validateUnit(unit);
+        this.unit = unit;
+    }
+
     public void setMinimum(int minimum) {
         validateMinimum(minimum);
         this.minimum = minimum;
@@ -88,7 +115,7 @@ public class Article {
         this.price = price;
     }
 
-    public boolean increaseQuantity(int amount) {
+    public boolean increaseQuantity(double amount) {
         if (amount <= 0) {
             return false;
         }
@@ -96,7 +123,7 @@ public class Article {
         return true;
     }
 
-    public boolean decreaseQuantity(int amount) {
+    public boolean decreaseQuantity(double amount) {
         if (amount <= 0 || amount > quantity) {
             return false;
         }
@@ -110,7 +137,8 @@ public class Article {
 
     @Override
     public String toString() {
-        return String.format("ID: %d | Name: %s | Quantity: %d | Minimum: %d | Price: %.2f",
-                id, name, quantity, minimum, price);
+        return String.format(
+                "ID: %d | Name: %s | Quantity: %.2f %s | Minimum: %d | Price: %.2f",
+                id, name, quantity, unit, minimum, price);
     }
 }

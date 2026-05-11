@@ -43,6 +43,16 @@ public class InputHelper {
         }
     }
 
+    public static <E extends Enum<E>> E readEnumSelection(Scanner scanner, String prompt, E[] values) {
+        while (true) {
+            int selection = readNonNegativeInt(scanner, prompt);
+            if (selection >= 1 && selection <= values.length) {
+                return values[selection - 1];
+            }
+            System.out.println("Ungültige Auswahl. Bitte wählen Sie einen gültigen Eintrag aus.");
+        }
+    }
+
     public static String readNonEmptyString(Scanner scanner, String prompt) {
         while (true) {
             System.out.print(prompt);
